@@ -29,7 +29,7 @@ int rtn2( int i ) {
 }
 int g( int i ) {
     int flag = false;
-    int val; // value to return (simulates what was previously thrown by rtn functions) 
+    int val;
     for ( int j = 0; j < times && flag == false; j += 1 ) {
         if ( rand() % 2 == 0 ) {
             val = rtn1( i );
