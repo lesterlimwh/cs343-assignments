@@ -6,16 +6,26 @@ using namespace std;
 int times = 1000;                       // default value
 
 int rtn1( int i ) {
-    for ( int j = 0; j < times; j += 1 ) {
-        if ( rand() % 10000 == 42 ) return j;
+    bool flag = false;
+    int val = -1;
+    for ( int j = 0; j < times && !flag; j += 1 ) {
+        if ( rand() % 10000 == 42 ) {
+            val = j;
+            flag = true;
+        }
     }
-    return -1; // special value to indicate completion without early return 
+    return val;
 }
 int rtn2( int i ) {
-    for ( int j = times; j >= 0; j -= 1 ) {
-        if ( rand() % 10000 == 42 ) return j;
+    bool flag = false;
+    int val = -1;
+    for ( int j = times; j >= 0 && !flag; j -= 1 ) {
+        if ( rand() % 10000 == 42 ) {
+            val = j;
+            flag = true;
+        }
     }
-    return -1; // special value to indicate completion without early return 
+    return val; 
 }
 int g( int i ) {
     int flag = false;

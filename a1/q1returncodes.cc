@@ -9,13 +9,13 @@ int rtn1( int i ) {
     for ( int j = 0; j < times; j += 1 ) {
         if ( rand() % 10000 == 42 ) return j;
     }
-    return -1; // special value to indicate completion without early return 
+    return -1; // sentinel value to indicate completion without early return 
 }
 int rtn2( int i ) {
     for ( int j = times; j >= 0; j -= 1 ) {
         if ( rand() % 10000 == 42 ) return j;
     }
-    return -1; // special value to indicate completion without early return 
+    return -1; // sentinel value to indicate completion without early return 
 }
 int g( int i ) {
     int val; // value to return (simulates what was previously thrown by rtn functions)
