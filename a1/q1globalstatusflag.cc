@@ -4,31 +4,44 @@ using namespace std;
 #include <unistd.h>                     // access: getpid
 
 int times = 1000;                       // default value
+int flag = -1;
 
 void rtn1( int i ) {
     for ( int j = 0; j < times; j += 1 ) {
-        if ( rand() % 10000 == 42 ) throw j;
+        if ( rand() % 10000 == 42 ) {
+            flag = j;
+            return;
+        };
     }
 }
 void rtn2( int i ) {
     for ( int j = times; j >= 0; j -= 1 ) {
-        if ( rand() % 10000 == 42 ) throw j;
+        if ( rand() % 10000 == 42 ) {
+            flag = j;
+            return;
+        }
     }
 }
 void g( int i ) {
-    for ( int j = 0; j < times; j += 1 ) {
+    for ( int j = 0; j < times && flag == -1; j += 1 ) {
         if ( rand() % 2 == 0 ) rtn1( i );
         else rtn2( i );
     }
-    if ( i % 2 ) rtn2( i );
-    rtn1( i );
+    
+    if ( i % 2 && flag == -1) rtn2( i );
+
+    if (flag == -1) {
+        rtn1( i );
+    }
 }
 void f( int i ) {
-    for ( int j = 0; j < times; j += 1 ) {
+    for ( int j = 0; j < times && flag == -1; j += 1 ) {
         g( i );
     }
-    if ( i % 2 ) g( i );
-    g( i );
+    if ( i % 2 && flag == -1) g( i );
+
+    if (flag == -1)
+        g( i );
 }
 int main( int argc, char *argv[] ) {
     int seed = getpid();                // default value
@@ -44,10 +57,11 @@ int main( int argc, char *argv[] ) {
         exit( 1 );
     } // try
     srand( seed );			// set random-number seed
-    try {				// begin program
-        f( 3 );
+
+    f( 3 );
+    if (flag == -1) {
         cout << "seed:" << seed << " times:" << times << " complete" << endl;
-    } catch( int rc ) {
-        cout << "seed:" << seed << " times:" << times << " rc:" << rc << endl;
-    } // try
+    } else {
+        cout << "seed:" << seed << " times:" << times << " rc:" << flag << endl;
+    }
 }
