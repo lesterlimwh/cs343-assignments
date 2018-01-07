@@ -5,30 +5,68 @@ using namespace std;
 
 int times = 1000;                       // default value
 
-void rtn1( int i ) {
+int rtn1( int i ) {
     for ( int j = 0; j < times; j += 1 ) {
-        if ( rand() % 10000 == 42 ) throw j;
+        if ( rand() % 10000 == 42 ) return j;
     }
+    return -1; // special value to indicate completion without early return 
 }
-void rtn2( int i ) {
+int rtn2( int i ) {
     for ( int j = times; j >= 0; j -= 1 ) {
-        if ( rand() % 10000 == 42 ) throw j;
+        if ( rand() % 10000 == 42 ) return j;
     }
+    return -1; // special value to indicate completion without early return 
 }
-void g( int i ) {
-    for ( int j = 0; j < times; j += 1 ) {
-        if ( rand() % 2 == 0 ) rtn1( i );
-        else rtn2( i );
+int g( int i ) {
+    int flag = false;
+    int val; // value to return (simulates what was previously thrown by rtn functions) 
+    for ( int j = 0; j < times && flag == false; j += 1 ) {
+        if ( rand() % 2 == 0 ) {
+            val = rtn1( i );
+            if (val != -1) {
+                flag = true;
+            }
+        } else {
+            val = rtn2( i );
+            if (val != -1) {
+                flag = true;
+            }
+        }
     }
-    if ( i % 2 ) rtn2( i );
-    rtn1( i );
+    if ( i % 2 && !flag) {
+        val = rtn2( i );
+        if (val != -1) {
+            flag = true;
+        }
+    }
+
+    if (!flag) {
+        val = rtn1( i );
+    }
+
+    return val; // either returns -1 or a positive value
 }
-void f( int i ) {
-    for ( int j = 0; j < times; j += 1 ) {
-        g( i );
+int f( int i ) {
+    bool flag = false;
+    int val;
+
+    for ( int j = 0; j < times && flag == false; j += 1 ) {
+        val = g( i );
+        if (val != -1) {
+            flag = true;
+        }
     }
-    if ( i % 2 ) g( i );
-    g( i );
+    if ( i % 2 && !flag ) {
+        val = g( i );
+        if (val != -1) {
+            flag = true;
+        }
+    }
+    if (!flag) {
+        val = g( i );
+    }
+
+    return val; // either returns -1 or a positive value
 }
 int main( int argc, char *argv[] ) {
     int seed = getpid();                // default value
@@ -44,10 +82,11 @@ int main( int argc, char *argv[] ) {
         exit( 1 );
     } // try
     srand( seed );			// set random-number seed
-    try {				// begin program
-        f( 3 );
+    // begin program
+    int rc = f( 3 );
+    if (rc == -1) {
         cout << "seed:" << seed << " times:" << times << " complete" << endl;
-    } catch( int rc ) {
+    } else {
         cout << "seed:" << seed << " times:" << times << " rc:" << rc << endl;
-    } // try
+    }
 }
