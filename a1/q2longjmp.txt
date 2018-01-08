@@ -1,0 +1,39 @@
+i.
+In the transformed program, the output is not exactly the same in that the number of tides (~)
+printed from the destructors in the output are different. The reason for this is because using 
+try/catch is an operation that unwinds the stack, calling appropriate destructors, whereas 
+setjmp/longjmp is a more low level and doesn't perform these steps.
+
+ii.
+Without compiler optimization:
+
+time ./q2 10 10 1 30
+user 1m11.044s
+
+time ./q2longjmp 10 10 1 30
+user 0m18.896s
+
+With compiler optimization:
+
+time ./q2 10 10 1 30
+user 1m37.100s  
+
+time ./q2longjmp 10 10 1 30
+user 0m12.688s
+
+iii.
+
+After transforming the program to setjmp/longjmp, the performance increased by a large amount of
+approximately 53 seconds with the arguments "10 10 1 30". The reason for the performance
+increase is because we send the control of the program directly to the exception handler using
+a low level API, rather than using a higher level try/catch which correctly unwinds the stack
+and calls destructors, among other performance degrading tasks.
+
+iv.
+
+When compiler optimization is used, the performance between the transformed and original
+programs is still quite large (approximately 1 minute and 25 seconds difference), for the reason 
+mentioned in part iii. However, the time taken to run q2 with compiler optimization as opposed
+to without compiler optimization is actually longer because the compiler likely optimizes for
+the success cases, but the large amount of exceptions slow it down.
+
