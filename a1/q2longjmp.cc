@@ -1,8 +1,9 @@
 #include <iostream>
 #include <cstdlib>
-using namespace std;
+#include <memory.h>
 #include <unistd.h>                     // access: getpid
 #include <setjmp.h>
+using namespace std;
 
 #ifdef NOOUTPUT
 #define PRT( stmt )

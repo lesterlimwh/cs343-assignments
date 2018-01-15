@@ -5,22 +5,22 @@ MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}# makefile name
 OBJECTS01 = q1exception.o		# optional build of given program
 EXEC01 = exception			# given executable name
 
-OBJECTS1 = # object files forming 1st executable with prefix "q1"
+OBJECTS1 = q1flags.o # object files forming 1st executable with prefix "q1"
 EXEC1 = flags				# 1st executable name
 
-OBJECTS2 = # object files forming 2nd executable with prefix "q1"
+OBJECTS2 = q1returncodes.o # object files forming 2nd executable with prefix "q1"
 EXEC2 = returncodes			# 2nd executable name
 
-OBJECTS3 = # object files forming 3rd executable with prefix "q1"
+OBJECTS3 = q1globalstatusflag.o # object files forming 3rd executable with prefix "q1"
 EXEC3 = globalstatusflag		# 3rd executable name
 
 OBJECTS02 = q2throwcatch.o		# optional build of given program
 EXEC02 = throwcatch			# given executable name
 
-OBJECTS4 = # object files forming 4th executable with prefix "q2"
+OBJECTS4 = q2longjmp.o # object files forming 4th executable with prefix "q2"
 EXEC4 = longjmp				# 4th executable name
 
-OBJECTS5 = # object files forming 5th executable with prefix "q3"
+OBJECTS5 = q3money.o # object files forming 5th executable with prefix "q3"
 EXEC5 = money				# 5th executable name
 
 OBJECTS = ${OBJECTS1} ${OBJECTS2} ${OBJECTS3} ${OBJECTS4} ${OBJECTS5}
