@@ -12,7 +12,7 @@ _Coroutine Money {
     char separator_ch; // expected separator char
 
     void handleFailure() {
-      cout << "nope" << endl;
+      _Resume Error() _At resumer();
     }
 
     void main() { // coroutine main
@@ -37,7 +37,7 @@ _Coroutine Money {
         suspend();
       }
 
-      int max_groups = 0;
+      int max_groups = 5;
       Groups: for (int i=0; i<max_groups; ++i) {
         if (i == 0) { // parse first digit group 
           for (int j=0; j<DIGITS_PER_GROUP; ++j) {
@@ -53,6 +53,16 @@ _Coroutine Money {
               suspend();
               continue;
             }
+          }
+          // parse separator or decimal
+          if (ch == decimal_ch) {
+            suspend();
+        break Groups;
+          } else if (ch == separator_ch) {
+            suspend();
+        continue Groups;
+          } else {
+            handleFailure();
           }
         } else { // not the first grouping 
           // parse 3 digits
@@ -74,21 +84,27 @@ _Coroutine Money {
           }
         }
       }
-      
-      // parse decimal digits
-      for (int i=0; i<2; ++i) {
-        if (!isdigit(ch)) {
-          handleFailure();
-        }
-        suspend();
+
+      // parse first decimal digit
+      if (!isdigit(ch)) {
+        handleFailure();
+      }
+      suspend();
+
+      // parse second decimal digit
+      if (!isdigit(ch)) {
+        handleFailure();
+      }
+      suspend();
+
+      if (ch != '\n') {
+        handleFailure();
       }
 
-      cout << "valid!" << endl;
+      _Resume Match() _At resumer();
     }
   public:
-    Money() {
-      cout << " constructed " << endl;
-    }
+    Money() {}
     _Event Match {}; // last character match
     _Event Error {}; // last character invalid
     void next(char c) {
@@ -121,27 +137,38 @@ int main(int argc, char* argv[]) {
 
   string str;
   while (std::getline(*in, str)) { // read each line in input stream
-    cout << "lala" << endl;
-    Money m;
-    for (char& ch : str) { // iterate through characters per line
-      m.next(ch);
+    size_t i;
+  
+    // special case for newlines
+    if (str == "") {
+      cout <<  "'': Warning! Blank line." << endl;
+      continue;
+    }
+
+    try {
+      _Enable{
+        Money m;
+
+        for (i=0; i<str.length(); ++i) { // iterate through characters per line
+          m.next(str[i]);
+        }
+        m.next('\n'); // send newline to resume and indicate completion to Money
+      }
+    } catch(Money::Match) {
+      cout << "'" << str << "' : '" << str.substr(0, i+1)
+        << "' yes" << endl;
+    } catch(Money::Error) {
+      cout << "'" << str << "' : '" << str.substr(0, i+1)
+        << "' no";
+
+      if (i != str.length() - 1) {
+        cout << " -- extraneous characters: '" << str.substr(i+1) << "'" << endl;
+      } else {
+        cout << endl;
+      }
+      
     }
   }
-
-  cout << "ending" << endl;
-
-  // for (;;) {
-    // *in >> ch; // read a character
-    // // cout << ch << endl;
-
-    // if (ch == '\n') {
-      // cout << "new line" << endl;
-    // }
-
-    // if (in->fail()) {
-      // break; // end program when EOF or error
-    // }
-  // }
 
   if (in != &cin) {
     delete in; // close input stream if it's not cin
