@@ -13,6 +13,7 @@ _Coroutine Money {
 
     void handleFailure() {
       _Resume Error() _At resumer();
+      for (;;) suspend();
     }
 
     void main() { // coroutine main
@@ -76,7 +77,7 @@ _Coroutine Money {
           if (ch == decimal_ch) {
             suspend();
         break Groups;
-          } else if (ch == separator_ch) {
+          } else if (ch == separator_ch && i < max_groups - 1) { // reject separator in last group
             suspend();
         continue Groups;
           } else {
@@ -141,7 +142,7 @@ int main(int argc, char* argv[]) {
   
     // special case for newlines
     if (str == "") {
-      cout <<  "'': Warning! Blank line." << endl;
+      cout <<  "'' : Warning! Blank line." << endl;
       continue;
     }
 
@@ -152,6 +153,7 @@ int main(int argc, char* argv[]) {
         for (i=0; i<str.length(); ++i) { // iterate through characters per line
           m.next(str[i]);
         }
+        i--; // decrement counter to account extra increment at for completion
         m.next('\n'); // send newline to resume and indicate completion to Money
       }
     } catch(Money::Match) {
@@ -162,7 +164,7 @@ int main(int argc, char* argv[]) {
         << "' no";
 
       if (i != str.length() - 1) {
-        cout << " -- extraneous characters: '" << str.substr(i+1) << "'" << endl;
+        cout << " -- extraneous characters '" << str.substr(i+1) << "'" << endl;
       } else {
         cout << endl;
       }
