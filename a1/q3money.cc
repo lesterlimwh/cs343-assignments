@@ -96,11 +96,6 @@ _Coroutine Money {
       if (!isdigit(ch)) {
         handleFailure();
       }
-      suspend();
-
-      if (ch != '\n') {
-        handleFailure();
-      }
 
       _Resume Match() _At resumer();
     }
@@ -154,21 +149,21 @@ int main(int argc, char* argv[]) {
           m.next(str[i]);
         }
         i--; // decrement counter to account extra increment at for completion
-        m.next('\n'); // send newline to resume and indicate completion to Money
+        m.next('\n');
       }
     } catch(Money::Match) {
       cout << "'" << str << "' : '" << str.substr(0, i+1)
-        << "' yes" << endl;
+        << "' yes";
+
     } catch(Money::Error) {
       cout << "'" << str << "' : '" << str.substr(0, i+1)
         << "' no";
+    }
 
-      if (i != str.length() - 1) {
-        cout << " -- extraneous characters '" << str.substr(i+1) << "'" << endl;
-      } else {
-        cout << endl;
-      }
-      
+    if (i != str.length() - 1) {
+      cout << " -- extraneous characters '" << str.substr(i+1) << "'" << endl;
+    } else {
+      cout << endl;
     }
   }
 
