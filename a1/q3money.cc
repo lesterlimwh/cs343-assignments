@@ -12,8 +12,8 @@ _Coroutine Money {
     char separator_ch; // expected separator char
 
     void handleFailure() {
-      _Resume Error() _At resumer();
-      for (;;) suspend();
+      _Resume Error() _At resumer(); // throw non-local exception
+      for (;;) suspend(); // eat up remaining resumes
     }
 
     void main() { // coroutine main
@@ -31,13 +31,14 @@ _Coroutine Money {
       }
       suspend();
 
-      // check for optional minus
+      // parse optional minus
       if (ch != '-' && !isdigit(ch)) {
         handleFailure();
       } else if (ch == '-') {
         suspend();
       }
 
+      // parse groups of digits
       int max_groups = 5;
       Groups: for (int i=0; i<max_groups; ++i) {
         if (i == 0) { // parse first digit group 
@@ -97,7 +98,7 @@ _Coroutine Money {
         handleFailure();
       }
 
-      _Resume Match() _At resumer();
+      _Resume Match() _At resumer(); // throw non-local exception for matching
     }
   public:
     Money() {}
@@ -160,6 +161,7 @@ int main(int argc, char* argv[]) {
         << "' no";
     }
 
+    // output extraneous characters
     if (i != str.length() - 1) {
       cout << " -- extraneous characters '" << str.substr(i+1) << "'" << endl;
     } else {

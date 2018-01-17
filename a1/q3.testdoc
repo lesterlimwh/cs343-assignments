@@ -1,0 +1,120 @@
+Q3 TEST DOCUMENTATION
+========================
+The program takes user input from a file or stdin, and checks whether it's a valid
+money format, line by line.
+
+USER INTERFACE TESTING
+  There is no user interface to be tested, so the testing focuses solely on
+  program output based on different inputs.
+
+ALGORITHM TESTING
+  TEST 1: NO INPUT 
+    DESCRIPTION
+    This test is for when the input string is a simple newline.
+
+    TESTING
+    ```
+    ./money
+    <enter>
+    ```
+
+    OUTPUT
+    '' : Warning! Blank line.
+
+    ANALYSIS
+    The output is correct as per specification, since there is no input string.
+
+  TEST 2: SHORT INPUT
+    DESCRIPTION
+    This test is for an input string that is too short to be parsed as a proper money string,
+    thus making it invalid.
+
+    TESTING
+    ```
+    ./money
+    $1.1
+    ```
+
+    OUTPUT
+    ```
+    '$1.1' : '$1.1' no
+    ```
+
+    ANALYSIS
+    Two decimal digits are required per specification. Since there's only one in the input,
+    then the output is "no" is correct. Additionally, no extraneous characters are output,
+    since the input string is too short.
+
+  TEST 3: LONG INPUT - VALID
+    DESCRIPTION
+    This test is for an input string that is prefixed with a correctly formatted money string.
+    We expect the result to be "yes", with extraneous characters printed.
+
+    TESTING
+    ```
+    ./money
+    $-10.005
+    ```
+
+    OUTPUT
+    '$-10.005' : '$-10.00' yes -- extraneous characters '5'
+
+    ANALYSIS
+    As expected, the output is "yes", since "$-10.00" is a valid money string. However, there is
+    an extra "5" at the end, which the program outputs as an extraneous character correctly.
+
+  TEST 4: LONG INPUT - INVALID
+    DESCRIPTION
+    This test is for an input string that is invalid with a lot of extra characters at the end.
+    We expect the program to output these extra characters, along with a "no".
+
+    TESTING
+    ```
+    ./money
+    E10,10000000
+    ```
+
+    OUTPUT
+    'E10,10000000' : 'E10,10' yes -- extraneous characters '000000'
+
+    ANALYSIS
+    As expected, the output is "no", since it can only have 2 decimal digits max, but this has
+    8 decimal digits. It's correct at "E10,10", but the extra trailing characters make it
+    incorrect, and the extraneous characters are also printed correctly.
+
+  TEST 5: FUZZING
+  ---------------
+    DESCRIPTION
+    This test covers any remaining cases not considered above, and adds to the confidence of the
+    program. It uses the input supplied in the specification:
+
+    ```
+    $1.00
+    E1,00
+    $-1.00
+    E1.234,00
+    $-12,345.67
+    E123.456,78
+    $1,222,333,444,555.45
+
+    $1.0
+    E,00
+    $+1.00
+    E1,234,00
+    $1234.56
+    E123.456,7
+    E-1.222.333.444.555.666,45
+    ```
+
+    TESTING
+    In order to run this test, this input was saved into a file called `q3_input.txt`, which was
+    subsequently passed into the `money` and `money_sample_sol` executables, whose outputs were
+    then compared using the `diff` command.
+    E.g.
+    ./money q3_input.txt > mine
+    ./money_sample_sol q3_input.txt > theirs
+    diff mine theirs
+
+    ANALYSIS
+    The output of the `diff` command is empty, which is expected, as it means we have identical
+    output to the sample solution provided.

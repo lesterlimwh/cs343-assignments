@@ -1,0 +1,15 @@
+'$1.00' : '$1.00' yes
+'E1,00' : 'E1,00' yes
+'$-1.00' : '$-1.00' yes
+'E1.234,00' : 'E1.234,00' yes
+'$-12,345.67' : '$-12,345.67' yes
+'E123.456,78' : 'E123.456,78' yes
+'$1,222,333,444,555.45' : '$1,222,333,444,555.45' yes
+'' : Warning! Blank line.
+'$1.0' : '$1.0' no
+'E,00' : 'E,' no -- extraneous characters '00'
+'$+1.00' : '$+' no -- extraneous characters '1.00'
+'E1,234,00' : 'E1,23' yes -- extraneous characters '4,00'
+'$1234.56' : '$1234' no -- extraneous characters '.56'
+'E123.456,7' : 'E123.456,7' no
+'E-1.222.333.444.555.666,45' : 'E-1.222.333.444.555.' no -- extraneous characters '666,45'
