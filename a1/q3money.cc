@@ -13,7 +13,7 @@ _Coroutine Money {
 
     void handleFailure() {
       _Resume Error() _At resumer(); // throw non-local exception
-      for (;;) suspend(); // eat up remaining resumes
+      suspend();
     }
 
     void main() { // coroutine main
@@ -99,6 +99,7 @@ _Coroutine Money {
       }
 
       _Resume Match() _At resumer(); // throw non-local exception for matching
+      suspend();
     }
   public:
     Money() {}
