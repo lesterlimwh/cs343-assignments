@@ -4,7 +4,6 @@
 using namespace std;
 
 void WhitespaceFilter::main() {
-  cout << "whitespacefilter main has begun" << endl; 
   try {
     _Enable {
       for (;;) {
@@ -15,7 +14,7 @@ void WhitespaceFilter::main() {
         
         // echo the middle while eating through all spaces
         for (;;) {
-          // echo character if it's not blank
+          // send char to next filter if it's not blank
           if (!isblank(ch)) {
             next->put(ch);
             suspend();
@@ -38,10 +37,8 @@ void WhitespaceFilter::main() {
       }
     }
   } catch(Eof& eof) {
-    cout << "eof caught in whitespacefilter" << endl;
-    // rethrow instead
     _Resume eof _At *next;
-    next->put('\n');
+    next->put('\n'); // put arbitrary char to resume next filter
   }
 }
 

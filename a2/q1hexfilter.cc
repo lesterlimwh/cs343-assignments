@@ -26,13 +26,14 @@ void HexFilter::main() {
   try {
     _Enable {
       for (;;) {
-        for (int g = 0; g < 4; g++) {
+        for (int g = 0; g < 4; g++) { // pattern repeated 4 times a line
           handleTwoChars();
-          next->put(' ');
+          next->put(' '); // 1 space
           handleTwoChars();
           if (g == 3) {
             next->put('\n');
           } else {
+            // 3 spaces
             next->put(' ');
             next->put(' ');
             next->put(' ');
@@ -41,10 +42,8 @@ void HexFilter::main() {
       }
     }
   } catch(Eof& eof) {
-    cout << "eof caught in hexfilter" << endl;
-    // rethrow instead
     _Resume eof _At *next;
-    next->put('\n');
+    next->put('\n'); // resume next filter with arbitrary char
   }
 }
 

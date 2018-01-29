@@ -4,13 +4,11 @@
 using namespace std;
 
 void Reader::main() {
-  cout << "reader main has begun" << endl; 
-
   for (;;) {
-    *in >> ch;
+    *in >> ch; // read a char
 
     if (in->fail()) {
-      _Resume Eof() _At *next;
+      _Resume Eof() _At *next; // notify end of file
       next->put('\n'); // resume next filter with arbitrary char
       break;
     }

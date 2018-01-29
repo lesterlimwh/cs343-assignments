@@ -70,17 +70,15 @@ int main( int argc, char *argv[] ) {
   for (size_t i = filterOptions.size(); i-- > 0;) { // traverse options in reverse order
     switch (filterOptions.at(i)[1]) {
       case 'h':
-        cout << "-h specified" << endl;
         filters[i] = new HexFilter(prev);
         prev = filters[i];
         break;
       case 'w':
-        cout << "-w specified" << endl;
         filters[i] = new WhitespaceFilter(prev);
         prev = filters[i];
         break;
       default:
-        cout << "unknown filter " << filterOptions.at(i) << endl;
+        cerr << "unknown filter " << filterOptions.at(i) << endl;
         exit(EXIT_FAILURE);
     }
   }

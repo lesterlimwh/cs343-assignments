@@ -6,7 +6,7 @@
 
 _Coroutine Writer : public Filter {
     std::ostream *out;
-    int outputCount;
+    int outputCount; // keeps track of number of characters output
     void main();
   public:
     Writer(std::ostream *o);

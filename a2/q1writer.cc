@@ -4,18 +4,16 @@
 using namespace std;
 
 void Writer::main() {
-  cout << "writer main has begun" << endl; 
   try {
     _Enable {
       for (;;) {
         outputCount++;
-        (*out) << ch;
+        (*out) << ch; // outputs char to stream
         suspend();
       }
     }
   } catch(Eof&) {
-    cout << "eof caught in writer" << endl;
-    cout << outputCount << "characters" << endl;
+    cout << outputCount << " characters" << endl;
   }
 }
 
