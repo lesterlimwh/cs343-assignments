@@ -32,37 +32,35 @@ int main( int argc, char *argv[] ) {
   ostream *out = &cout;
   vector<char*> filterOptions; // holds filter options
 
-  if (argc > 1) {
-    int i = 1;
+  int i = 1;
 
-    // parse filter options
-    while (argv[i][0] == '-') {
-      filterOptions.push_back(argv[i]);
-      i++;
-    }
+  // parse filter options
+  while (i < argc && argv[i][0] == '-') {
+    filterOptions.push_back(argv[i]);
+    i++;
+  }
 
-    // parse possible input and output files
-    int remainingArgCount = argc - i;
-    switch(remainingArgCount) {
-      case 2:
-				try {
-					out = new ofstream(argv[i + 1]);
-				} catch(uFile::Failure) {
-					cerr << "Error! Could not open output file \"" << argv[i + 1] << "\"" << endl;
-					exit(EXIT_FAILURE);
-				}     
-      case 1:
-				try {
-					in = new ifstream(argv[i]);
-				} catch(uFile::Failure) {
-					cerr << "Error! Could not open input file \"" << argv[i] << "\"" << endl;
-					exit(EXIT_FAILURE);
-				}
-      case 0:
-        break;
-      default:
-        usage(argv);
-    }
+  // parse possible input and output files
+  int remainingArgCount = argc - i;
+  switch(remainingArgCount) {
+    case 2:
+      try {
+        out = new ofstream(argv[i + 1]);
+      } catch(uFile::Failure) {
+        cerr << "Error! Could not open output file \"" << argv[i + 1] << "\"" << endl;
+        exit(EXIT_FAILURE);
+      }
+    case 1:
+      try {
+        in = new ifstream(argv[i]);
+      } catch(uFile::Failure) {
+        cerr << "Error! Could not open input file \"" << argv[i] << "\"" << endl;
+        exit(EXIT_FAILURE);
+      }
+    case 0:
+      break;
+    default:
+      usage(argv);
   }
 
   // initialize filter system
