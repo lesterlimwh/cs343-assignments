@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include "q1filter.h"
-// #include "q1hexfilter.h"
+#include "q1hexfilter.h"
 // #include "q1whitespacefilter.h"
 #include "q1reader.h"
 #include "q1writer.h"
@@ -64,12 +64,26 @@ int main( int argc, char *argv[] ) {
   }
 
   // initialize filter system
-  Filter *prev;
   Writer writer(out);
+  Filter* filters[filterOptions.size()]; // keep track of polymorphic filters
+  Filter* prev = &writer; // keep track of previous filter to build chain
   for (size_t i = filterOptions.size(); i-- > 0;) { // traverse options in reverse order
-    // skip dis for nao 
+    switch (filterOptions.at(i)[1]) {
+      case 'h':
+        cout << "-h specified" << endl;
+        filters[i] = new HexFilter(prev);
+        prev = filters[i];
+        break;
+      case 'w':
+        cout << "-w specified" << endl;
+        break;
+      default:
+        cout << "unknown filter " << filterOptions.at(i) << endl;
+        exit(EXIT_FAILURE);
+    }
   }
-  Reader reader(&writer, in);
+  *in >> noskipws; // turn off white space skipping during input
+  Reader reader(prev, in); // activate reader
 
   // close file streams
 	if (in != &cin) {
@@ -78,4 +92,10 @@ int main( int argc, char *argv[] ) {
 	if (out != &cout) {
 		delete out;
 	}
+
+  cout << "cleaning up" << endl;
+  // clean up filters in heap
+  for (auto f : filters) {
+    delete f;
+  }
 }

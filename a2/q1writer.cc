@@ -12,8 +12,8 @@ void Writer::main() {
         suspend();
       }
     }
-  } catch(Eof) {
-    cout << "eof caught" << endl;
+  } catch(Eof&) {
+    cout << "eof caught in writer" << endl;
   }
 }
 
