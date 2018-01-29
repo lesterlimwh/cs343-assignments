@@ -93,7 +93,6 @@ int main( int argc, char *argv[] ) {
 		delete out;
 	}
 
-  cout << "cleaning up" << endl;
   // clean up filters in heap
   for (auto f : filters) {
     delete f;

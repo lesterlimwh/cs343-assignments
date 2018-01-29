@@ -8,15 +8,18 @@ void Writer::main() {
   try {
     _Enable {
       for (;;) {
+        outputCount++;
         (*out) << ch;
         suspend();
       }
     }
   } catch(Eof&) {
     cout << "eof caught in writer" << endl;
+    cout << outputCount << "characters" << endl;
   }
 }
 
 Writer::Writer(ostream *o) {
   out = o;
+  outputCount = 0;
 }
