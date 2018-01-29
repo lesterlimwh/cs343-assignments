@@ -4,10 +4,10 @@
 _Coroutine Filter {
   protected:
     _Event Eof {};                    // no more characters
-    Filter * next;                    // next filter in chain
+    Filter *next;                     // next filter in chain
     unsigned char ch;                 // communication variable
   public:
-    void put( unsigned char c ) {
+    void put(unsigned char c) {
       ch = c;
       resume();
     }

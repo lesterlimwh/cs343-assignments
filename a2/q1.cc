@@ -64,6 +64,12 @@ int main( int argc, char *argv[] ) {
   }
 
   // initialize filter system
+  Filter *prev;
+  Writer writer(out);
+  for (size_t i = filterOptions.size(); i-- > 0;) { // traverse options in reverse order
+    // skip dis for nao 
+  }
+  Reader reader(&writer, in);
 
   // close file streams
 	if (in != &cin) {

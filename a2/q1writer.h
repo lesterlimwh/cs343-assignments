@@ -5,6 +5,7 @@
 #include <iostream>
 
 _Coroutine Writer : public Filter {
+    std::ostream *out;
     void main();
   public:
     Writer(std::ostream *o);

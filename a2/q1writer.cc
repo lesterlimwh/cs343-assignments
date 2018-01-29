@@ -5,9 +5,18 @@ using namespace std;
 
 void Writer::main() {
   cout << "writer main has begun" << endl; 
-  suspend();
+  try {
+    _Enable {
+      for (;;) {
+        (*out) << ch;
+        suspend();
+      }
+    }
+  } catch(Eof) {
+    cout << "eof caught" << endl;
+  }
 }
 
 Writer::Writer(ostream *o) {
-  cout << "Writer constructed" << endl;
+  out = o;
 }

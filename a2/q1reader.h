@@ -5,6 +5,7 @@
 #include <iostream>
 
 _Coroutine Reader : public Filter {
+    std::istream *in; // input stream to read from
     void main();
   public:
     Reader(Filter *f, std::istream *i);
