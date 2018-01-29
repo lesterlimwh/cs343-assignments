@@ -4,7 +4,7 @@
 #include <string>
 #include "q1filter.h"
 #include "q1hexfilter.h"
-// #include "q1whitespacefilter.h"
+#include "q1whitespacefilter.h"
 #include "q1reader.h"
 #include "q1writer.h"
 
@@ -76,6 +76,8 @@ int main( int argc, char *argv[] ) {
         break;
       case 'w':
         cout << "-w specified" << endl;
+        filters[i] = new WhitespaceFilter(prev);
+        prev = filters[i];
         break;
       default:
         cout << "unknown filter " << filterOptions.at(i) << endl;
