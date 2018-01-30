@@ -22,7 +22,6 @@ void HexFilter::handleTwoChars() {
 }
 
 void HexFilter::main() {
-  cout << "hexfilter main has begun" << endl; 
   try {
     _Enable {
       for (;;) {
