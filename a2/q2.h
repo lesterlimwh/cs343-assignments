@@ -5,10 +5,9 @@
 #include <vector>
 #include "PRNG.h"
 
-// PRNG prng;
-
 class Potato {
-    // YOU ADD MEMBERS HERE
+    int maxTicks; // maximum ticks
+    int currentTick; // current tick #
   public:
     _Event Explode {};
     Potato( unsigned int maxTicks = 10 );
@@ -27,8 +26,10 @@ _Coroutine Player {
         int id;                               // highest id seen so far
         Election( int id ) : id( id ) {}
     };
+    int id;                                   // player id
     Player * partner[2];                      // left and right player
-    // YOU ADD MEMBERS HERE
+    Potato * potato;
+    bool holdingPotato;                       // is player holding potato
     void main();
   public:
     static Player * umpire;                   // current umpire

@@ -2,12 +2,17 @@
 
 using namespace std;
 
+extern PRNG prng; // global declared in q2.cc
+
 Potato::Potato(unsigned int maxTicks) {
-  cout << "potato created" << endl;
+  reset();
 }
 
 void Potato::reset(unsigned int maxTicks) {
-  cout << "resetting potato" << endl;
+  currentTick = 0;
+  this->maxTicks = prng(1, maxTicks);
+  cout << "POTATO goes off after " << this->maxTicks
+    << (this->maxTicks == 1 ? " toss" :  " tosses") << endl;
 }
 
 void Potato::countdown() {

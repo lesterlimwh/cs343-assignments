@@ -29,6 +29,7 @@ int tryParseStringToNumber(char* arg) {
 int main( int argc, char *argv[] ) {
   int numGames = 5;
   int numPlayers;
+  bool numPlayersSpecified = false; // generates players each game if false
 
   // parse user input
   switch (argc) {
@@ -39,9 +40,8 @@ int main( int argc, char *argv[] ) {
         prng.seed(tryParseStringToNumber(argv[3]));
       }
     case 3: // read players
-      if (argv[2][0] == 'x') {
-        numPlayers = prng(2, 10); 
-      } else {
+      if (argv[2][0] != 'x') {
+        numPlayersSpecified = true;
         numPlayers = tryParseStringToNumber(argv[2]);
         if (numPlayers < 2) {
           usage(argv[0]);
@@ -62,21 +62,37 @@ int main( int argc, char *argv[] ) {
       usage(argv[0]);
   }
 
-  if (argc < 3) { // generate numPlayers if it isn't specified in args
-    numPlayers = prng(2, 10); 
-  }
-
   // create potato
   Potato potato;
 
-  // create circle of players
-  vector<Player*> players;
-  for (int i = 0; i < numPlayers; ++i) {
-    players.push_back(new Player(i, potato));
-  }
+  for (int g = 0; g < numGames; ++g) {
+    if (!numPlayersSpecified) { // generate numPlayers if it isn't specified in args
+      numPlayers = prng(2, 10);
+    }
+    cout << numPlayers << " players in the game" << endl;
 
-  // clean up
-  for (auto player : players) {
-    delete player;
+    // store vector of players
+    vector<Player*> players;
+    for (int i = 0; i < numPlayers; ++i) {
+      players.push_back(new Player(i, potato));
+    }
+
+    // create circle of players
+    for (int i = 0; i < numPlayers; ++i) {
+      Player * left = players.at((i + players.size() - 1) % players.size());
+      Player * right = players.at((i + players.size() + 1) % players.size());
+      players.at(i)->start(*left, *right);
+    }
+
+    // set global empire
+    Player::umpire = players.at(0);
+
+    // toss potato to it to start game
+    Player::umpire->toss();
+
+    // clean up
+    for (auto player : players) {
+      delete player;
+    }
   }
 }
