@@ -5,19 +5,11 @@
 #include "q1filter.h"
 #include "q1hexfilter.h"
 #include "q1whitespacefilter.h"
+#include "q1sentencefilter.h"
 #include "q1reader.h"
 #include "q1writer.h"
 
 using namespace std;
-
-/*
-_Coroutine filter-name : public Filter {
-    // YOU MAY ADD PRIVATE MEMBERS
-    void main();
-  public:
-    filter-name( Filter * f, ... );
-};
-*/
 
 // prints usage information
 void usage(char *argv[]) {
@@ -75,6 +67,10 @@ int main( int argc, char *argv[] ) {
         break;
       case 'w':
         filters[i] = new WhitespaceFilter(prev);
+        prev = filters[i];
+        break;
+      case 's':
+        filters[i] = new SentenceFilter(prev);
         prev = filters[i];
         break;
       default:

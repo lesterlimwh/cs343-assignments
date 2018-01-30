@@ -2,7 +2,7 @@ CXX = u++					# compiler
 CXXFLAGS = -g -Wall -Wextra -MMD
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
-OBJECTS1 = q1.o q1filter.o q1reader.o q1writer.o q1hexfilter.o q1whitespacefilter.o # object files forming 1st executable with prefix "q1"
+OBJECTS1 = q1.o q1filter.o q1reader.o q1writer.o q1hexfilter.o q1whitespacefilter.o q1sentencefilter.o # object files forming 1st executable with prefix "q1"
 EXEC1 = filter
 
 OBJECTS2 = q2.o # object files forming 2st executable with prefix "q2"
