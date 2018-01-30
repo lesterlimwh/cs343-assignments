@@ -13,7 +13,7 @@ void Writer::main() {
       }
     }
   } catch(Eof&) {
-    cout << outputCount << " characters" << endl;
+    (*out) << outputCount << " characters" << endl;
   }
 }
 

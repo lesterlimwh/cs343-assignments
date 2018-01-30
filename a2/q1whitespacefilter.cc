@@ -14,8 +14,11 @@ void WhitespaceFilter::main() {
         
         // echo the middle while eating through all spaces
         for (;;) {
-          // send char to next filter if it's not blank
-          if (!isblank(ch)) {
+          if (ch == '\n') {
+            next->put('\n');
+            suspend();
+            break;
+          } else if (!isblank(ch)) { // send char to next filter if it's not blank
             next->put(ch);
             suspend();
             continue;
@@ -27,12 +30,14 @@ void WhitespaceFilter::main() {
           }
           if (ch == '\n') { // case where it's at the end of the line
             next->put('\n');
+            suspend();
+            break;
           } else {
             next->put(' '); // case where it's in the middle
             next->put(ch);
+            suspend();
           }
 
-          suspend();
         }
       }
     }
