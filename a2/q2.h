@@ -2,6 +2,7 @@
 #define __Q2_H__ 1
 
 #include <iostream>
+#include <vector>
 #include "PRNG.h"
 
 // PRNG prng;

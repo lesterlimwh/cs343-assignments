@@ -65,4 +65,18 @@ int main( int argc, char *argv[] ) {
   if (argc < 3) { // generate numPlayers if it isn't specified in args
     numPlayers = prng(2, 10); 
   }
+
+  // create potato
+  Potato potato;
+
+  // create circle of players
+  vector<Player*> players;
+  for (int i = 0; i < numPlayers; ++i) {
+    players.push_back(new Player(i, potato));
+  }
+
+  // clean up
+  for (auto player : players) {
+    delete player;
+  }
 }

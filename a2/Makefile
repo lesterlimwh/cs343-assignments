@@ -5,7 +5,7 @@ MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 OBJECTS1 = q1.o q1filter.o q1reader.o q1writer.o q1hexfilter.o q1whitespacefilter.o q1sentencefilter.o # object files forming 1st executable with prefix "q1"
 EXEC1 = filter
 
-OBJECTS2 = q2.o q2potato.o # object files forming 2st executable with prefix "q2"
+OBJECTS2 = q2.o q2potato.o q2player.o # object files forming 2st executable with prefix "q2"
 EXEC2 = hotpotato
 
 OBJECTS = ${OBJECTS1} ${OBJECTS2}		# all object files
