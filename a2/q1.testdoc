@@ -1,0 +1,193 @@
+Q1 TEST DOCUMENTATION
+========================
+The program takes user input from a file or stdin, as well as filter options from the CLI. Then,
+it reads input and applies the specified filters, before outputting the result, as well as
+the number of characters that were output.
+
+USER INTERFACE TESTING
+  There is no user interface to be tested, so the testing focuses solely on
+  program output based on different inputs.
+
+ALGORITHM TESTING
+  TEST 1: NO OPTIONS 
+    DESCRIPTION
+    This test is a basic test with no options specified. We expect it to echo whatever is entered
+    in stdin. It also should output the number of characters output.
+
+    TESTING
+    ```
+    ./filter
+    hello world
+    ```
+
+    OUTPUT
+    hello world
+    12 characters
+
+    ANALYSIS
+    The output is correct as per specification, since the stdout matches the stdin, and it
+    prints 12 characters.
+
+  TEST 2: WITH INPUT FILE 
+    DESCRIPTION
+    This test is to test input file capabilities. It should read from a file instead of stdin,
+    and echo the input as per specification.
+
+    TESTING
+    ```
+    ./filter input.txt
+    ```
+
+    where input.txt contains:
+    ```
+    hello world
+    ```
+
+    OUTPUT
+    ```
+    hello world
+    12 characters
+    ```
+
+    ANALYSIS
+    The output is correct as per specification, since stdout matches the contents of input.txt.
+
+  TEST 3: WITH OUTPUT FILE 
+    DESCRIPTION
+    This test is to test output file capabilities. It should read from a file,
+    and write the input into the specified test file.
+
+    TESTING
+    ```
+    ./filter input.txt output.txt
+    ```
+
+    where input.txt contains:
+    ```
+    hello world
+    ```
+
+    OUTPUT
+    output.txt contains:
+    ```
+    hello world
+    12 characters
+    ```
+
+    ANALYSIS
+    The output is correct as per specification, since the contents of input.txt  matches the
+    contents of input.txt.
+
+  TEST 4: INVALID USAGE 
+    DESCRIPTION
+    This test is to check that our CLI gracefully fails on invalid input.
+
+    TESTING
+    ```
+    ./filter input.txt output.txt extra
+    ```
+
+    OUTPUT
+    ```
+    Usage: ./filter [ -filter-options ... ] [ infile [outfile] ]
+    ```
+
+    ANALYSIS
+    The output is correct as per specification, since stderr displays an appropriate usage.
+
+
+  TEST 5: WHITESPACE FILTER
+    DESCRIPTION
+    This test isolates the whitespace filter to check it behaves according to specification:
+    removing spaces in front, limiting them to 1 inbetween words, and removing trailing spaces.
+
+    TESTING
+    ```
+    ./filter -w
+       hello   world   
+         good bye   world
+    ```
+
+    OUTPUT
+    ```
+    hello world
+    good bye world
+    27 characters
+    ```
+
+    ANALYSIS
+    As expected, the output has no leading and trailing space, and there is only 1 space between
+    each of its words. It also outputs a correct character count of 27.
+
+  TEST 6: HEX FILTER
+    DESCRIPTION
+    This test isolates the hex filter to check it behaves according to specification:
+    A pattern of "xxxx xxxx   xxxx xxxx   xxxx xxxx   xxxx xxxx" in each line. Additionally,
+    each group of "xx" should correspond to the hex representation of a character from the input.
+
+    TESTING
+    ```
+    ./filter -h
+    The quick brown fox,
+     knows the way.
+    ```
+
+    OUTPUT
+    ```
+    5468 6520   7175 6963   6b20 6272   6f77 6e20
+    666f 782c   0a20 6b6e   6f77 7320   7468 6520
+    7761 792e   0a106 characters
+    ```
+
+    ANALYSIS
+    The output matches what's provided in the provided solution exactly. The format of the output
+    is correct, following the specified pattern.
+
+  TEST 7: SENTENCE FILTER
+    DESCRIPTION
+    This test isolates my custom sentence filter to check it has the desired behaviour:
+    Lines that don't end with a period, question mark, or exclamation mark are filtered out.
+
+    TESTING
+    ```
+    ./filter -s
+    This is a sentence.
+    This isn't,
+    Neither is this
+    ```
+
+    OUTPUT
+    ```
+    This is a sentence.
+    20 characters
+    ```
+
+    ANALYSIS
+    As expected, the line "This is a sentence." is preserved, since it ends with the correct
+    punctuation. The other lines are filtered out.
+
+  TEST 6: COMPLEX FILTER CHAIN
+  ---------------
+    DESCRIPTION
+    This test combines several filter options, in order to check the end to end integrity of the
+    program. It aims to cover any remaining edge cases.
+
+    TESTING
+    In order to run this test, this input was saved into a file called `input.txt`, which was
+    subsequently passed into the `filter` and `filter_sol` executables, whose outputs were
+    then compared using the `diff` command.
+
+    E.g.
+    ./filter -w -h -h input.txt mine 
+    ./filter_sol -w -h -h input.txt theirs
+    diff mine theirs
+
+    Contents of input.txt:
+    ```
+      The  brown  fox ran
+    super fast!
+    ```
+
+    ANALYSIS
+    The output of the `diff` command is empty, which is expected, as it means we have identical
+    output to the sample solution provided.
