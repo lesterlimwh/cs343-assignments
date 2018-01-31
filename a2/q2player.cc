@@ -43,17 +43,20 @@ void Player::main() {
         }
       }
 
-      unlink(); // player unlinks itself .... 3 should point to itself
+      unlink(); // player unlinks itself 
       _Resume Terminate(this) _At *Player::umpire;
       Player::umpire->terminate();
     } catch (Player::Terminate &e) {
+      // reset potato to match output
       potato->reset();
       if (partner[0] == this && partner[1] == this) { // only player left, so game is finished
         break;
       }
+      // start next round
       this->firstToss = true;
       this->toss();
     } catch (Player::Election &e) {
+      // traverse circle through election propagation
       cout << " -> " << id;
       int higherId = this->id > e.id ? this->id : e.id;
       _Resume Election(higherId) _At *partner[1];
@@ -70,6 +73,7 @@ Player::Player(int id, Potato &p) {
 }
 
 void Player::unlink() {
+  // unlinks current player from the circle
   Player *left = partner[0];
   Player *right = partner[1];
   left->partner[1] = right;

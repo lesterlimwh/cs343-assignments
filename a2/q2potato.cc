@@ -9,6 +9,7 @@ Potato::Potato(unsigned int maxTicks) {
 }
 
 void Potato::reset(unsigned int maxTicks) {
+  // reset timer
   currentTick = 0;
   this->maxTicks = prng(1, maxTicks);
   cout << "  POTATO goes off after " << this->maxTicks
@@ -18,6 +19,6 @@ void Potato::reset(unsigned int maxTicks) {
 void Potato::countdown() {
   currentTick += 1;
   if (currentTick == maxTicks) {
-    _Throw Explode();
+    _Throw Explode(); // throw Explode event when timer is up
   }
 }
