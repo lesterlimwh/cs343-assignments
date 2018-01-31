@@ -84,7 +84,7 @@ int main( int argc, char *argv[] ) {
       players.at(i)->start(*left, *right);
     }
 
-    // set global empire
+    // set global umpire
     Player::umpire = players.at(0);
 
     // toss potato to it to start game

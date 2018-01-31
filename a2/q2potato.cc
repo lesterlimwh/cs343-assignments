@@ -11,10 +11,13 @@ Potato::Potato(unsigned int maxTicks) {
 void Potato::reset(unsigned int maxTicks) {
   currentTick = 0;
   this->maxTicks = prng(1, maxTicks);
-  cout << "POTATO goes off after " << this->maxTicks
+  cout << "  POTATO goes off after " << this->maxTicks
     << (this->maxTicks == 1 ? " toss" :  " tosses") << endl;
 }
 
 void Potato::countdown() {
-  cout << "potato countdown!" << endl;
+  currentTick += 1;
+  if (currentTick == maxTicks) {
+    _Throw Explode();
+  }
 }

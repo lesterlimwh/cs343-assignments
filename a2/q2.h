@@ -30,7 +30,10 @@ _Coroutine Player {
     Player * partner[2];                      // left and right player
     Potato * potato;
     bool holdingPotato;                       // is player holding potato
+    bool firstToss;                           // specifies whether it's the umpire's first toss
+    static Player * oldUmpire;                // old umpire for election traversal stopping
     void main();
+    void unlink();                            // unlink self from circle
   public:
     static Player * umpire;                   // current umpire
 
