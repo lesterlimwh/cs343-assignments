@@ -1,0 +1,47 @@
+a)
+With multi:
+shared:21544633
+shared:29492426
+shared:24301235
+shared:25478575
+shared:22748773
+shared:20818965
+shared:23860352
+shared:25059872
+shared:21173517
+shared:21532547
+
+Without multi:
+shared:22576899
+shared:20923262
+shared:24785936
+shared:25153195
+shared:20000000
+shared:24796520
+shared:25073710
+shared:24823601
+shared:24988330
+shared:20000000
+
+b)
+No. Not all 10 runs for each version must produce the same results. An addition instruction is not atomic, composed of several instructions (load, add, and store). Since there are multiple 
+threads that can run and interrupt anywhere in between, then some threads might be computing
+based on older values (that were loaded before interrupting), effectively making some writes
+useless.
+
+c)
+The largest value that is possible is 40000000. This case occurs when both tasks always accesses
+the shared variable at different times for all 10000000 iterations.
+
+The smallest value possible is 2. This case occurs when the first task loads 1 into a register,
+but it preempted before storing it back to memory. Then, task 2 runs 9999999 iterations,
+increasing the shared variable to 19999999, but it is preempted before adding its final += 1
+on the 10000000th iteration. Then the first task stores 1 into memory. The second task resumes
+and adds 1 to that, giving a final value of 2.
+
+d)
+The multiprocessor output is slightly lower than the uniprocessor output, which is to be
+expected, since there will be preempting issues mentioned in b), as well as additional
+problem of accessing the shared variable at the same time in different cores. This means that
+they might both read the same value, but an increment in one core might not be reflected during
+the addition isntruction in the other thread, which leads to redundant adds.
