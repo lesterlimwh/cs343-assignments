@@ -94,5 +94,10 @@ int main( int argc, char *argv[] ) {
     for (auto player : players) {
       delete player;
     }
+
+    // print spaces in between if we're not in the last game
+    if (g < numGames - 1) {
+      cout << endl << endl;
+    }
   }
 }
