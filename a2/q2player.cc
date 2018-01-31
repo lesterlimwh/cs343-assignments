@@ -24,7 +24,6 @@ void Player::main() {
         potato->countdown();
 
         // toss to next player
-        holdingPotato = false;
         partner[prng(1)]->toss();
       }
     } catch (Potato::Explode &e) {
@@ -84,7 +83,6 @@ void Player::start(Player &lp, Player& rp) {
 }
 
 void Player::toss() {
-  holdingPotato = true;
   resume();
 }
 
