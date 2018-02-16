@@ -1,0 +1,57 @@
+a)
+
+no preprocessor variables, times = 100000000
+
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./a.out 1 100000000
+7.14u 0.00s 0:07.13
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./a.out 2 100000000
+14.26u 0.02s 0:07.16
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./a.out 4 100000000
+31.53u 0.07s 0:08.05
+
+
+DARRAY, times = 40000000
+
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./a.out 1 40000000
+3.38u 0.00s 0:03.37
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./a.out 2 40000000
+36.07u 0.05s 0:18.17
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./a.out 4 40000000
+115.17u 0.07s 0:28.96
+
+
+VECTOR1, times = 10000000
+
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./a.out 1 10000000
+1.39u 0.00s 0:01.39
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./a.out 2 10000000
+7.72u 0.00s 0:03.92
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./a.out 4 10000000
+42.28u 0.05s 0:10.84
+
+
+VECTOR2, times = 3000000
+
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./a.out 1 3000000
+2.03u 0.00s 0:02.03
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./a.out 2 3000000
+17.83u 0.02s 0:08.92
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./a.out 4 3000000
+75.64u 0.09s 0:19.05
+
+
+b)
+
+For the version using no preprocessor variables, increasing the number of tasks does not increase the real time, but proportionally increases the user time.
+For the version using DARRAY, increasing the number of tasks increases the real time by a decreasing amount, but exponentially increases the user time.
+For the version using VECTOR1, increasing the number of tasks increases the real time by a decreasing amount, but exponentially increases the user time.
+For the version using VECTOR2, increasing the number of tasks increases the real time by a decreasing amount, but exponentially increases the user time.
+
+c)
+For VECTOR1 and DARRAY, increasing the number of tasks increase the real time by a decreasing amount. The reason for this is because they allocate the space
+for the container beforehand, which means that more parallelism can be achieved from the threads. However, with VECTOR2, there is the overhead of dynamically
+resizing the container, which is an operation that must be sequential, so timing isn't increased as much as in the other cases.
+
+
+
+more concurrency possible due to fixed size (doesn't need to resize blah blah)
