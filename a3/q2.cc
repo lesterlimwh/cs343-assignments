@@ -10,8 +10,8 @@ ostream *out = &cout;
 // debugging function
 template<typename T>
 void printArr(T values[], int low, int high) {
-  for (int i = low; i <= high; ++i) {
-    cout << values[i] << ", ";
+for (int i = low; i <= high; ++i) {
+  cout << values[i] << ", ";
   }
   cout << endl;
 }
@@ -46,8 +46,6 @@ template<typename T> _Task Mergesort {
 
     // function to sort and merge 2 partitions 
     void merge(T values[], int low, int middle, int high) {
-      cout << "merge" << endl;
-      cout << "low: " << low << ", middle: " << middle << ", high: " << high << endl;
       int leftSize = middle - low + 1;
       int rightSize = high - middle;
 
@@ -60,10 +58,6 @@ template<typename T> _Task Mergesort {
       // pointers to beginning of left and right partitions
       int i = 0;
       int j = 0;
-
-      // temp
-      printArr(left, 0, leftSize - 1);
-      printArr(right, 0, rightSize - 1);
 
       // place sorted values into values array
       while (i != leftSize && j != rightSize) {
@@ -86,13 +80,9 @@ template<typename T> _Task Mergesort {
         }
       }
 
-      printArr(values, 0, 3);
-
       // clean up temporary variables
       delete[] left;
       delete[] right;
-
-      return;
     }
 
     void main() {
@@ -211,7 +201,6 @@ int main( int argc, char *argv[] ) {
       // read values for unsorted array
       for (int i = 0; i < size; ++i) {
         *in >> val;
-        cout << val << endl;
         arr[i] = val;  
       }
 
