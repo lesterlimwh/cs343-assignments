@@ -16,6 +16,25 @@ for (int i = low; i <= high; ++i) {
   cout << endl;
 }
 
+template<typename T>
+void printArray(T values[], int size) {
+  int i = 0;
+
+  for (;;) {
+    cout << values[i];
+    if (i == size - 1) { // last element in the entire array
+      cout << endl;
+      break;
+    }
+    if ((i + 1) % 22 == 0) { // last element in the line
+      cout << endl << "  ";
+    } else {
+      cout << " ";
+    }
+    i++;
+  }
+}
+
 template<typename T> _Task Mergesort {
     bool isRoot; // denotes whether this mergesort is at the top level or not
     T *values;
@@ -205,29 +224,25 @@ int main( int argc, char *argv[] ) {
         arr[i] = val;  
       }
 
-      printArr(arr, 0, size - 1);
+      printArray(arr, size);
 
       {
         Mergesort<int> sorted(arr, 0, size - 1, depth);
       }
 
-      printArr(arr, 0, size - 1);
+      printArray(arr, size);
 
       delete[] arr; // clean up array
     }
   } else if (argv[1][1] == 't') {
     int *arr = new int[size]; // dimension integer array to size
     for (int i = 0; i < size; ++i) { // initialize array in descending order
-      arr[i] = size - i - 1;
+      arr[i] = size - i;
     }
-
-    printArr(arr, 0, size - 1);
 
     {
       Mergesort<int> sorted(arr, 0, size - 1, depth);
     }
-
-    printArr(arr, 0, size - 1); // prints sorted
 
     delete[] arr; // clean up array
   }
