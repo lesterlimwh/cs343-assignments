@@ -198,7 +198,33 @@ int main( int argc, char *argv[] ) {
 
   // execute command
   if (argv[1][1] == 's') {
+    int size;
+    int val;
+    for (;;) {
+      if (in->fail()) { // might need to do read to trigger this shit? maybe move this to top of loop?
+        break;
+      }
 
+      *in >> size; // read size of array
+      int *arr = new int[size];
+
+      // read values for unsorted array
+      for (int i = 0; i < size; ++i) {
+        *in >> val;
+        cout << val << endl;
+        arr[i] = val;  
+      }
+
+      printArr(arr, 0, size - 1);
+
+      {
+        Mergesort<int> sorted(arr, 0, size - 1, depth);
+      }
+
+      printArr(arr, 0, size - 1);
+
+      delete[] arr; // clean up array
+    }
   } else if (argv[1][1] == 't') {
     int *arr = new int[size]; // dimension integer array to size
     for (int i = 0; i < size; ++i) { // initialize array in descending order
@@ -208,7 +234,7 @@ int main( int argc, char *argv[] ) {
     printArr(arr, 0, size - 1);
 
     {
-      Mergesort<int> sorted(arr, 0, size - 1, 6); // try depth = 2
+      Mergesort<int> sorted(arr, 0, size - 1, depth);
     }
 
     printArr(arr, 0, size - 1); // prints sorted
