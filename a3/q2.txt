@@ -1,0 +1,26 @@
+i)
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./quicksort -t 50000000 0
+10.36u 4.61s 0:14.98
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./quicksort -t 50000000 1
+10.36u 3.86s 0:14.22
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./quicksort -t 50000000 2
+10.53u 5.10s 0:15.63
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./quicksort -t 50000000 3
+10.90u 4.61s 0:15.51
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./quicksort -t 50000000 4
+11.47u 1.28s 0:12.76
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./quicksort -t 50000000 5
+12.18u 4.91s 0:17.10
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./quicksort -t 50000000 6
+16.38u 5.32s 0:21.71
+
+ii)
+At lower depths, the user time is the lowest, whereas the user time is higher when the depth is increased, startign with 10.36u at depth 0, to 16.38u at depth 6.
+However, for real time, it starts off increasing as the depth increases, but when the depth is at 4, it's faster than
+all the real time for all the other depths, before it finally increases again at depth 5 and 6. At depth 0, it has a real time of 0:14.98, which increases to
+0:15.51 at depth 3, but then it is faster with a real time of 0:12.76 at depth 4, before increasing to 0:17.10 and 0:21.71 at depth 5 and 6 respectively.
+
+iii)
+For each kernel thread used, there is some additional overhead work to be done. The real time it takes from program start to finish
+will only be faster with more processors if there's sufficiently enough kernel threads per processor to work, and the parallelism it
+achieves is enough to overcome the overhead of kernel thread abtraction.
