@@ -1,6 +1,11 @@
 #include <iostream>
+#include <fstream>
 
 using namespace std;
+
+// initialize streams to stdin and stdout
+istream *in = &cin;
+ostream *out = &cout;
 
 // debugging function
 template<typename T>
@@ -119,22 +124,103 @@ unsigned int uDefaultStackSize() {
     return 512 * 1000;        // set task stack-size to 512K
 }
 
+// prints usage information
+void usage(char *arg) {
+  cerr << "Usage: " << arg
+    << " ( -s unsorted-file [ sorted-file ] |"
+    << " -t size (>= 0) [ depth (>= 0) ] )" << endl;
+  exit(EXIT_FAILURE);
+}
+
+int tryParseStringToNumber(char* arg) {
+  char* endptr;
+
+  long val = strtol(arg, &endptr, 10);
+
+  if (*endptr == 0) { // successfully parsed string
+    return int(val);
+  } else {
+    return -1; // will never get here, but gets rid of compiler warning
+  }
+}
+
 int main( int argc, char *argv[] ) {
-  // uProcessor p[ (1 << depth) - 1 ] __attribute__(( unused )); // 2^depth-1 kernel threads
-  
-  int *arr = new int[1];
-  arr[0] = 1;
-  arr[1] = 4;
-  arr[2] = 0;
-  arr[3] = 9;
+  // -t command arguments
+  int depth = 0;
+  int size;
 
-  printArr(arr, 0, 3); // prints unsorted
-
-  {
-    Mergesort<int> sorted(arr, 0, 3, 6); // try depth = 2
+  if (argc < 3) {
+    usage(argv[0]); // exit early if insufficient arguments
   }
 
-  printArr(arr, 0, 3); // prints sorted
+  // parse command line args
+  if (argv[1][1] == 's') {
+    switch(argc) {
+      case 4:
+				try {
+					out = new ofstream(argv[3]);
+				} catch(uFile::Failure) {
+					cerr << "Error! Could not open sorted output file \"" << argv[3] << "\"" << endl;
+          usage(argv[0]);
+				}
+      case 3:
+				try {
+					in = new ifstream(argv[2]);
+				} catch(uFile::Failure) {
+					cerr << "Error! Could not open unsorted input file \"" << argv[2] << "\"" << endl;
+          usage(argv[0]);
+				}
+        break;
+      default:
+        usage(argv[0]);
+    }
+  } else if (argv[1][1] == 't') {
+    switch(argc) {
+      case 4:
+				depth = tryParseStringToNumber(argv[3]);
+        if (depth < 0) {
+          usage(argv[0]);
+        }
+      case 3:
+        size = tryParseStringToNumber(argv[2]);
+        if (size < 0) {
+          usage(argv[0]);
+        }
+        break;
+      default:
+        usage(argv[0]);
+    }
+  } else {
+    usage(argv[0]);
+  }
 
-  delete[] arr;
+  uProcessor p[ (1 << depth) - 1 ] __attribute__(( unused )); // 2^depth-1 kernel threads
+
+  // execute command
+  if (argv[1][1] == 's') {
+
+  } else if (argv[1][1] == 't') {
+    int *arr = new int[size]; // dimension integer array to size
+    for (int i = 0; i < size; ++i) { // initialize array in descending order
+      arr[i] = size - i - 1;
+    }
+
+    printArr(arr, 0, size - 1);
+
+    {
+      Mergesort<int> sorted(arr, 0, size - 1, 6); // try depth = 2
+    }
+
+    printArr(arr, 0, size - 1); // prints sorted
+
+    delete[] arr;
+  }
+
+	// close file streams
+  if (in != &cin) {
+    delete in;
+  }
+  if (out != &cout) {
+    delete out;
+  }
 }
