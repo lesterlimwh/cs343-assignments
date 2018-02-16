@@ -11,32 +11,36 @@ ostream *out = &cout;
 template<typename T>
 void printArr(T values[], int low, int high) {
 for (int i = low; i <= high; ++i) {
-  cout << values[i] << ", ";
+  *out << values[i] << ", ";
   }
-  cout << endl;
+  *out << endl;
 }
 
 template<typename T>
 void printArray(T values[], int size) {
   int i = 0;
 
+  if (size == 0) { // handle case where array is empty
+    *out << endl;
+    return;
+  }
+
   for (;;) {
-    cout << values[i];
+    *out << values[i];
     if (i == size - 1) { // last element in the entire array
-      cout << endl;
+      *out << endl;
       break;
     }
     if ((i + 1) % 22 == 0) { // last element in the line
-      cout << endl << "  ";
+      *out << endl << "  ";
     } else {
-      cout << " ";
+      *out << " ";
     }
     i++;
   }
 }
 
 template<typename T> _Task Mergesort {
-    bool isRoot; // denotes whether this mergesort is at the top level or not
     T *values;
     int low;
     int high;
@@ -51,7 +55,7 @@ template<typename T> _Task Mergesort {
 
       // call mergesort on left partition
       if (depth > 0) { // create task
-        Mergesort<T> left(values, low, middle, depth - 1, false);
+        Mergesort<T> left(values, low, middle, depth - 1);
       } else { // mergesort recursively
         mergeSort(values, low, middle);
       }
@@ -106,26 +110,15 @@ template<typename T> _Task Mergesort {
 
     void main() {
       verify();
-
       mergeSort(values, low, high);
     }
 
-    // prob don't need?
-    // private constructor that is used to mark a task as non-top-level
-    Mergesort(T values[], unsigned int low, unsigned int high, unsigned int depth, bool isRoot) {
-      this->values = values; 
-      this->low = low;
-      this->high = high;
-      this->depth = depth;
-      this->isRoot = isRoot;
-    }
   public:
     Mergesort( T values[], unsigned int low, unsigned int high, unsigned int depth ) {
       this->values = values; 
       this->low = low;
       this->high = high;
       this->depth = depth;
-      this->isRoot = true;
     }
 };
 
@@ -231,6 +224,8 @@ int main( int argc, char *argv[] ) {
       }
 
       printArray(arr, size);
+
+      *out << endl; // end each set with blank line
 
       delete[] arr; // clean up array
     }
