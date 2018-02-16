@@ -191,11 +191,12 @@ int main( int argc, char *argv[] ) {
     int size;
     int val;
     for (;;) {
-      if (in->fail()) { // might need to do read to trigger this shit? maybe move this to top of loop?
+      *in >> size; // read size of array
+
+      if (in->fail()) { // if end of input, finish program
         break;
       }
 
-      *in >> size; // read size of array
       int *arr = new int[size];
 
       // read values for unsorted array
@@ -228,7 +229,7 @@ int main( int argc, char *argv[] ) {
 
     printArr(arr, 0, size - 1); // prints sorted
 
-    delete[] arr;
+    delete[] arr; // clean up array
   }
 
 	// close file streams
