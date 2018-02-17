@@ -9,7 +9,7 @@ CXXFLAGS = -g -Wall -Wextra ${OPT} -MMD -std=c++11 -DTYPE="${TYPE}" \
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
 OBJECTS1 = q2.o # object files forming 1st executable with prefix "q2"
-EXEC1 = quicksort				# 1st executable name
+EXEC1 = mergesort				# 1st executable name
 
 OBJECTS2 = q3.o # object files forming 2nd executable with prefix "q3"
 EXEC2 = buffer					# 2nd executable name
