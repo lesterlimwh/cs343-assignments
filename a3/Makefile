@@ -1,7 +1,7 @@
 TYPE:=int
 SENTINEL:=-1
-KIND:=NOBUSY
-OPT:= # -multi -O2
+KIND:=BUSY
+OPT:= -multi -O2
 
 CXX = u++					# compiler
 CXXFLAGS = -g -Wall -Wextra ${OPT} -MMD -std=c++11 -DTYPE="${TYPE}" \

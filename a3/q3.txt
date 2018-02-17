@@ -1,0 +1,70 @@
+a)
+
+iii.
+It's impossible to solve the problem using barging prevention because barging prevention does not
+release the lock at the end, only when a task barges.
+
+b)
+i.
+
+Non-busy, without optimization
+
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./buffer 50 55 50000 30 10
+7.09u 0.02s 0:07.14
+
+Non-busy, with optimization
+
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./buffer 50 55 50000 30 10
+5.48u 0.03s 0:05.52
+
+Busy, without optimization
+
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./buffer 50 55 50000 30 10
+4.72u 0.02s 0:04.76
+
+Busy, with optimization
+
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./buffer 50 55 50000 30 10
+4.31u 0.04s 0:04.36
+
+ii.
+In general, the buffer with busy-waiting had better performance than the buffer with non-busywaiting.
+The optimization made both slightly faster.
+
+iii.
+
+Non-busy, without optimization and multi
+
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./buffer 50 55 50000 30 10
+144.04u 0.18s 0:36.01
+
+Non-busy, with optimization and multi
+
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./buffer 50 55 50000 30 10
+161.98u 0.20s 0:40.52
+
+Busy, without optimization and multi
+
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./buffer 50 55 50000 30 10
+169.11u 0.20s 0:42.28
+
+Busy, with optimization and multi
+
+@ubuntu1604-002% /usr/bin/time -f "%Uu %Ss %E" ./buffer 50 55 50000 30 10
+121.38u 0.15s 0:30.37
+
+iv.
+
+In general, the uniprocessor version without multi performed drastically better than with the multi flag.
+
+v.
+
+The reason that busy-waiting is faster than non-busywaiting is because we don't use extra locks for barging,
+which saves instructions in the busywaiting approach.
+
+vi.
+
+The reason that uniprocessor execution is faster than multiprocessor execution is because there
+is more time spent with different processors trying to acquire locks at the same time. This leads
+to more time waiting and retrying to acquire locks.
+
