@@ -5,5 +5,6 @@ Voter::Voter( unsigned int id, unsigned int nvotes, TallyVotes & voteTallier, Pr
 
 void Voter::main() {
   printer.print(id, States::Start);
+  printer.print(id, States::Finished);
 }
 

@@ -83,8 +83,6 @@ int main( int argc, char *argv[] ) {
     voters[i] = new Voter(i, num_votes, voteTallier, printer);
   }
 
-  cout << "========" << endl;
-
   for (int i = 0; i < num_voters; ++i) {
     delete voters[i];
   }
