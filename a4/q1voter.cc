@@ -5,10 +5,16 @@ Voter::Voter( unsigned int id, unsigned int nvotes, TallyVotes & voteTallier, Pr
 
 void Voter::main() {
   yield(mprng(19)); // yield 0 - 19 times inclusive
+
   printer.print(id, States::Start);
+
   yield(mprng(4)); // yield 0 - 4 times inclusive
-  // vote
+
+  TallyVotes::Ballot ballot = cast(); // cast vote onto ballot 
+  voteTallier.vote(id, ballot); // submit vote for tallying
+
   yield(mprng(4)); // yield 0 - 4 times inclusive
+
   printer.print(id, States::Finished);
 }
 
