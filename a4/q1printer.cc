@@ -44,7 +44,7 @@ Printer::Printer( unsigned int voters ) {
 
   // output header
   for (unsigned int i = 0; i < voters; ++i) {
-    cout << setw(8) << left << "Voter" + to_string(i);
+    cout << setw(8) << left << "V" + to_string(i);
   }
   cout << endl;
   for (unsigned int i = 0; i < voters; ++i) {

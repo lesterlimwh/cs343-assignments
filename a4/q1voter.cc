@@ -6,15 +6,17 @@ Voter::Voter( unsigned int id, unsigned int nvotes, TallyVotes & voteTallier, Pr
 void Voter::main() {
   yield(mprng(19)); // yield 0 - 19 times inclusive
 
-  printer.print(id, States::Start);
+  for (unsigned int i = 0; i < num_votes; ++i) {
+    printer.print(id, States::Start);
 
-  yield(mprng(4)); // yield 0 - 4 times inclusive
+    yield(mprng(4)); // yield 0 - 4 times inclusive
 
-  TallyVotes::Ballot ballot = cast(); // cast vote onto ballot 
-  TallyVotes::Tour tour = voteTallier.vote(id, ballot); // submit vote for tallying
+    TallyVotes::Ballot ballot = cast(); // cast vote onto ballot 
+    TallyVotes::Tour tour = voteTallier.vote(id, ballot); // submit vote for tallying
 
-  yield(mprng(4)); // yield 0 - 4 times inclusive
+    yield(mprng(4)); // yield 0 - 4 times inclusive
 
-  printer.print(id, States::Finished, tour);
+    printer.print(id, States::Finished, tour);
+  }
 }
 
