@@ -94,20 +94,6 @@ void Printer::flush() {
     }
   }
 
-  // for (unsigned int id = 0; id < voters; ++id) { // output contents of all buffer voters
-    // if (buffer[id] != nullptr) {
-      // // cout << setw(8) << left << buffer[id]->format();
-      // cout << "\t" << buffer[id]->format();
-
-      // // clear buffer
-      // delete buffer[id];
-      // buffer[id] = nullptr;
-    // } else {
-      // // cout << setw(8) << left << "";
-      // cout << "\t";
-    // }
-  // }
-
   cout << endl;
 }
 
