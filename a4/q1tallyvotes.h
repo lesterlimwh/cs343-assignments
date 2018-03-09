@@ -19,6 +19,8 @@ _Cormonitor TallyVotes : public uBarrier {
   unsigned int pictureCount;
   unsigned int statueCount;
   unsigned int giftShopCount;
+  unsigned int completedVoters;
+  unsigned int num_winner_calculations;
 #else
   #error unsupported voter type
 #endif

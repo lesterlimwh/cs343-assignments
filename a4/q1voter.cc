@@ -14,9 +14,17 @@ void Voter::main() {
     TallyVotes::Ballot ballot = cast(); // cast vote onto ballot 
     TallyVotes::Tour tour = voteTallier.vote(id, ballot); // submit vote for tallying
 
+    // exit on failure to complete all tours
+    if (tour == TallyVotes::Tour::Failed) {
+      printer.print(id, States::Failed);
+      return;
+    }
+
     yield(mprng(4)); // yield 0 - 4 times inclusive
 
     printer.print(id, States::Finished, tour);
   }
+
+  voteTallier.done();
 }
 
