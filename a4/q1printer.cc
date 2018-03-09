@@ -43,12 +43,15 @@ Printer::Printer( unsigned int voters ) {
   }
 
   // output header
-  for (unsigned int i = 0; i < voters; ++i) {
-    cout << setw(8) << left << "V" + to_string(i);
+  cout << "V0";
+  for (unsigned int i = 1; i < voters; ++i) {
+    cout << "\tV" << i;
   }
   cout << endl;
-  for (unsigned int i = 0; i < voters; ++i) {
-    cout << setw(8) << left << "*******";
+
+  cout << "*******";
+  for (unsigned int i = 1; i < voters; ++i) {
+    cout << "\t*******";
   }
   cout << endl;
 }
@@ -64,17 +67,47 @@ Printer::~Printer() {
 }
 
 void Printer::flush() {
-  for (unsigned int id = 0; id < voters; ++id) { // output contents of all buffer voters
+  // figure out index to stop printing at
+  unsigned int highest;
+  for (unsigned int id = voters - 1; id >= 0; --id) {
     if (buffer[id] != nullptr) {
-      cout << setw(8) << left << buffer[id]->format();
+      highest = id;
+      break;
+    }
+  }
+
+  if (buffer[0] != nullptr) {
+    cout << buffer[0]->format();
+    // clear buffer
+    delete buffer[0];
+    buffer[0] = nullptr;
+  }
+  for (unsigned int id = 1; id <= highest; ++id) { // output contents of all buffer voters
+    if (buffer[id] != nullptr) {
+      cout << "\t" << buffer[id]->format();
 
       // clear buffer
       delete buffer[id];
       buffer[id] = nullptr;
-    } else {
-      cout << setw(8) << left << "";
+    } else if (id != highest) {
+      cout << "\t";
     }
   }
+
+  // for (unsigned int id = 0; id < voters; ++id) { // output contents of all buffer voters
+    // if (buffer[id] != nullptr) {
+      // // cout << setw(8) << left << buffer[id]->format();
+      // cout << "\t" << buffer[id]->format();
+
+      // // clear buffer
+      // delete buffer[id];
+      // buffer[id] = nullptr;
+    // } else {
+      // // cout << setw(8) << left << "";
+      // cout << "\t";
+    // }
+  // }
+
   cout << endl;
 }
 
