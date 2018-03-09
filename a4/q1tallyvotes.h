@@ -8,8 +8,25 @@ class TallyVotes {
   unsigned int num_voters;
   unsigned int group_size;
   Printer &printer;
+  unsigned int pictureCount;
+  unsigned int statueCount;
+  unsigned int giftShopCount;
+
 #elif defined( SEM ) // semaphore solution
+#include <uSemaphore.h>
 class TallyVotes {
+  unsigned int num_voters;
+  unsigned int group_size;
+  Printer &printer;
+  unsigned int pictureCount;
+  unsigned int statueCount;
+  unsigned int giftShopCount;
+  unsigned int voteCount;
+  unsigned int completedVoters;
+  uSemaphore group_sem;
+  uSemaphore mutex_sem;
+  bool failed; // indicates that not enough remaining voters to form a group
+
 #elif defined( BAR ) // barrier solution
 #include <uBarrier.h>
 _Cormonitor TallyVotes : public uBarrier {
@@ -21,6 +38,7 @@ _Cormonitor TallyVotes : public uBarrier {
   unsigned int giftShopCount;
   unsigned int completedVoters;
   unsigned int num_winner_calculations;
+
 #else
   #error unsupported voter type
 #endif

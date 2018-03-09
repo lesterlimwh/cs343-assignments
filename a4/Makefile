@@ -1,4 +1,4 @@
-KIND:=BAR
+KIND:=SEM
 OUTPUT:=OUTPUT
 
 CXX = u++					# compiler
