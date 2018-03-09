@@ -24,7 +24,7 @@ std::string State::format() {
     case Voter::States::Failed:
       return string(1, state);
     case Voter::States::Finished:
-      return string(1, state) + " " + to_string(tour);
+      return string(1, state) + " " + string(1, tour);
     case Voter::States::Vote:
       return string(1, state) + " " + to_string(ballot.picture) + "," + to_string(ballot.statue) + "," + to_string(ballot.giftshop);
     case Voter::States::Block:
@@ -54,10 +54,13 @@ Printer::Printer( unsigned int voters ) {
 }
 
 Printer::~Printer() {
+  flush();
   for (unsigned int i = 0; i < voters; ++i) {
     delete buffer[i];
   }
   delete[] buffer;
+  cout << "*****************" << endl;
+  cout << "All tours started" << endl;
 }
 
 void Printer::flush() {
@@ -79,7 +82,6 @@ void Printer::print( unsigned int id, Voter::States state ) {
 }
 
 void Printer::print( unsigned int id, Voter::States state, TallyVotes::Tour tour ) {
-  cout << "print2" << endl;
   if (buffer[id] != nullptr) {
     flush();
   }

@@ -15,6 +15,8 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
 
   uBarrier::block(); // wait for enough voters to vote before continuing
 
+  printer.print(id, Voter::States::Complete);
+
   // determine which tour to attend
   // priority on ties is gift shop, pictures, then statues
   if (giftShopCount >= statueCount && giftShopCount >= pictureCount) { // attend gift shop

@@ -11,10 +11,10 @@ void Voter::main() {
   yield(mprng(4)); // yield 0 - 4 times inclusive
 
   TallyVotes::Ballot ballot = cast(); // cast vote onto ballot 
-  voteTallier.vote(id, ballot); // submit vote for tallying
+  TallyVotes::Tour tour = voteTallier.vote(id, ballot); // submit vote for tallying
 
   yield(mprng(4)); // yield 0 - 4 times inclusive
 
-  printer.print(id, States::Finished);
+  printer.print(id, States::Finished, tour);
 }
 
