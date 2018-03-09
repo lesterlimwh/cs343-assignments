@@ -23,23 +23,23 @@ std::string State::format() {
 Printer::Printer( unsigned int voters ) { 
   this->voters = voters;
   buffer = new State*[voters]; // 1 buffer slot for each voter
-  for (int i = 0; i < voters; ++i) {
+  for (unsigned int i = 0; i < voters; ++i) {
     buffer[i] = nullptr; // initialize to nullptr
   }
 
   // output header
-  for (int i = 0; i < voters; ++i) {
+  for (unsigned int i = 0; i < voters; ++i) {
     cout << setw(8) << left << "Voter" + to_string(i);
   }
   cout << endl;
-  for (int i = 0; i < voters; ++i) {
+  for (unsigned int i = 0; i < voters; ++i) {
     cout << setw(8) << left << "*******";
   }
   cout << endl;
 }
 
 Printer::~Printer() {
-  for (int i = 0; i < voters; ++i) {
+  for (unsigned int i = 0; i < voters; ++i) {
     delete buffer[i];
   }
   delete[] buffer;
@@ -47,7 +47,7 @@ Printer::~Printer() {
 
 void Printer::flush() {
   cout << "flushing" << endl;
-  for (int id = 0; id < voters; ++id) { // output contents of all buffer voters
+  for (unsigned int id = 0; id < voters; ++id) { // output contents of all buffer voters
 
 
     // clear buffer
@@ -58,6 +58,7 @@ void Printer::flush() {
 
 void Printer::print( unsigned int id, Voter::States state ) {
   cout << "print1" << state << endl;
+  cout << "what" << endl;
   if (buffer[id] != nullptr) {
     flush();
   }

@@ -1,4 +1,4 @@
-KIND:=MC
+KIND:=BAR
 OUTPUT:=OUTPUT
 
 CXX = u++					# compiler
