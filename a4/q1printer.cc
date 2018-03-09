@@ -17,7 +17,22 @@ State::State( unsigned int id, Voter::States state, unsigned int numBlocked )
   : id(id), state(state), numBlocked(numBlocked) {}
 
 std::string State::format() {
-  return "lol";  
+  switch (state) {
+    case Voter::States::Start:
+    case Voter::States::Barging:
+    case Voter::States::Complete:
+    case Voter::States::Failed:
+      return string(1, state);
+    case Voter::States::Finished:
+      return string(1, state) + " " + to_string(tour);
+    case Voter::States::Vote:
+      return string(1, state) + " " + to_string(ballot.picture) + "," + to_string(ballot.statue) + "," + to_string(ballot.giftshop);
+    case Voter::States::Block:
+    case Voter::States::Unblock:
+      return string(1, state) + " " + to_string(numBlocked);
+    default:
+      throw; // invalid state
+  }
 }
 
 Printer::Printer( unsigned int voters ) { 
@@ -46,19 +61,17 @@ Printer::~Printer() {
 }
 
 void Printer::flush() {
-  cout << "flushing" << endl;
   for (unsigned int id = 0; id < voters; ++id) { // output contents of all buffer voters
-
+    cout << setw(8) << left << buffer[id]->format();
 
     // clear buffer
     delete buffer[id];
     buffer[id] = nullptr;
   }
+  cout << endl;
 }
 
 void Printer::print( unsigned int id, Voter::States state ) {
-  cout << "print1" << state << endl;
-  cout << "what" << endl;
   if (buffer[id] != nullptr) {
     flush();
   }
@@ -74,7 +87,6 @@ void Printer::print( unsigned int id, Voter::States state, TallyVotes::Tour tour
 }
 
 void Printer::print( unsigned int id, Voter::States state, TallyVotes::Ballot ballot ) {
-  cout << "print3" << endl;
   if (buffer[id] != nullptr) {
     flush();
   }
