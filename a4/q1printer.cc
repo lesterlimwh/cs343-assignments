@@ -65,11 +65,15 @@ Printer::~Printer() {
 
 void Printer::flush() {
   for (unsigned int id = 0; id < voters; ++id) { // output contents of all buffer voters
-    cout << setw(8) << left << buffer[id]->format();
+    if (buffer[id] != nullptr) {
+      cout << setw(8) << left << buffer[id]->format();
 
-    // clear buffer
-    delete buffer[id];
-    buffer[id] = nullptr;
+      // clear buffer
+      delete buffer[id];
+      buffer[id] = nullptr;
+    } else {
+      cout << setw(8) << left << "";
+    }
   }
   cout << endl;
 }
@@ -96,7 +100,6 @@ void Printer::print( unsigned int id, Voter::States state, TallyVotes::Ballot ba
 }
 
 void Printer::print( unsigned int id, Voter::States state, unsigned int numBlocked ) {
-  cout << "print4" << endl;
   buffer[id] = new State(id, state, numBlocked);
 }
 
