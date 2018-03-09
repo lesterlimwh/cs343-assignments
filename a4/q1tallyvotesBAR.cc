@@ -7,14 +7,14 @@ TallyVotes::TallyVotes( unsigned int voters, unsigned int group, Printer & print
  num_winner_calculations(0) {}
 
 TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
-  printer.print(id, Voter::States::Vote, ballot);
-
   // force waiting voters to unblock
   unsigned int remaining_voters = num_voters - completedVoters;
   if (remaining_voters < group_size) {
     uBarrier::block();
     return TallyVotes::Tour::Failed;
   }
+
+  printer.print(id, Voter::States::Vote, ballot);
 
   // add votes
   pictureCount += ballot.picture;

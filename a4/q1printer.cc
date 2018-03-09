@@ -100,6 +100,9 @@ void Printer::print( unsigned int id, Voter::States state, TallyVotes::Ballot ba
 }
 
 void Printer::print( unsigned int id, Voter::States state, unsigned int numBlocked ) {
+  if (buffer[id] != nullptr) {
+    flush();
+  }
   buffer[id] = new State(id, state, numBlocked);
 }
 
