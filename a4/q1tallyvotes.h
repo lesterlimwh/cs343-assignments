@@ -8,9 +8,16 @@ class TallyVotes {
   unsigned int num_voters;
   unsigned int group_size;
   Printer &printer;
-  unsigned int pictureCount;
-  unsigned int statueCount;
-  unsigned int giftShopCount;
+  unsigned int pictureCount; // counts number of picture votes
+  unsigned int statueCount; // counts number of statue votes
+  unsigned int giftShopCount; // counts number of gift shop votes
+  unsigned int voteCount; // counts number of votes
+  unsigned int completedVoters;
+  uOwnerLock mutex_lock;
+  uCondLock group_lock;
+  uCondLock barge_lock;
+  bool barge_signal; // signals barging
+  bool failed;
 
 #elif defined( SEM ) // semaphore solution
 #include <uSemaphore.h>
@@ -18,11 +25,11 @@ class TallyVotes {
   unsigned int num_voters;
   unsigned int group_size;
   Printer &printer;
-  unsigned int pictureCount;
-  unsigned int statueCount;
-  unsigned int giftShopCount;
-  unsigned int voteCount;
-  unsigned int completedVoters;
+  unsigned int pictureCount; // counts number of picture votes
+  unsigned int statueCount; // counts number of statue votes
+  unsigned int giftShopCount; // counts number of gift shop votes
+  unsigned int voteCount; // counts number of votes
+  unsigned int completedVoters; // number of voters who are done
   uSemaphore group_sem;
   uSemaphore mutex_sem;
   bool failed; // indicates that not enough remaining voters to form a group
@@ -33,11 +40,11 @@ _Cormonitor TallyVotes : public uBarrier {
   unsigned int num_voters;
   unsigned int group_size;
   Printer &printer;
-  unsigned int pictureCount;
-  unsigned int statueCount;
-  unsigned int giftShopCount;
-  unsigned int completedVoters;
-  unsigned int num_winner_calculations;
+  unsigned int pictureCount; // counts number of picture votes
+  unsigned int statueCount; // counts number of statue votes
+  unsigned int giftShopCount; // counts number of gift shop votes
+  unsigned int completedVoters; // number of voters who are done
+  unsigned int num_winner_calculations; // number of times winner was calculated
 
 #else
   #error unsupported voter type
@@ -49,6 +56,11 @@ _Cormonitor TallyVotes : public uBarrier {
     enum Tour { Picture = 'p', Statue = 's', GiftShop = 'g', Failed = 'f' };
     Tour vote( unsigned int id, Ballot ballot );
     void done();
+
+#if defined( MC )
+  private:
+    Tour winner; // winner of the vote
+#endif
 };
 
 #endif

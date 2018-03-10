@@ -1,4 +1,4 @@
-KIND:=SEM
+KIND:=MC
 OUTPUT:=OUTPUT
 
 CXX = u++					# compiler
