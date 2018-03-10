@@ -17,7 +17,6 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
   if (barge_signal) {
     printer.print(id, Voter::States::Barging);
     barge_lock.wait(mutex_lock);
-    barge_signal = false;
   }
 
 	printer.print(id, Voter::States::Vote, ballot);
@@ -29,15 +28,29 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
   giftShopCount += ballot.giftshop;
 
 	if (voteCount == group_size) {
-    barge_signal = true;
     printer.print(id, Voter::States::Complete);
-    group_lock.broadcast(); // unblock other voters
-
-    if (failed) {
-      winner = TallyVotes::Tour::Failed;
-      return TallyVotes::Tour::Failed;
+    voteCount--;
+  } else {
+    if (barge_lock.empty()) {
+      barge_signal = false;
+    } else {
+      barge_signal = true;
+      barge_lock.signal();
     }
 
+    printer.print(id, Voter::States::Block, voteCount);
+
+    group_lock.wait(mutex_lock);
+
+    voteCount--;
+
+    printer.print(id, Voter::States::Unblock, voteCount);
+  }
+
+  Tour winner;
+  if (failed) {
+    return TallyVotes::Tour::Failed;
+  } else {
     // determine which tour to attend
     // priority on ties is gift shop, pictures, then statues
     if (giftShopCount >= statueCount && giftShopCount >= pictureCount) { // attend gift shop
@@ -47,29 +60,24 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
     } else if (statueCount >= giftShopCount && statueCount >= pictureCount) { // attend statue
       winner = Tour::Statue;
     }
-    
+  }
+
+  if (!group_lock.empty()) {
+    barge_signal = true;
+    group_lock.signal();
+  } else if (!barge_lock.empty()) {
+    barge_signal = true;
+    barge_lock.signal();
     // reset votes
-    voteCount = 0;
     pictureCount = 0;
     statueCount = 0;
     giftShopCount = 0;
-    
-    barge_signal = false;
-    if (!barge_lock.empty()) {
-      barge_signal = true;
-      barge_lock.signal();
-    }
   } else {
-    printer.print(id, Voter::States::Block, voteCount);
-
-    if (!barge_lock.empty()) {
-      barge_signal = true;
-      barge_lock.signal();
-    }
-
-    group_lock.wait(mutex_lock);
-
-    printer.print(id, Voter::States::Unblock, voteCount);
+    barge_signal = false;
+    // reset votes
+    pictureCount = 0;
+    statueCount = 0;
+    giftShopCount = 0;
   }
 
   mutex_lock.release();
@@ -78,15 +86,17 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
 }
 
 void TallyVotes::done() {
-  completedVoters++;
-
   mutex_lock.acquire();
+  completedVoters++;
   unsigned int remaining_voters = num_voters - completedVoters;
   if (remaining_voters < group_size) {
+    if (barge_signal) {
+      barge_lock.wait(mutex_lock);
+    }
     failed = true;
+    barge_lock.broadcast();
     group_lock.broadcast();
   }
 
   mutex_lock.release();
-
 }

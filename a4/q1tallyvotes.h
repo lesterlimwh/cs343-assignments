@@ -56,11 +56,6 @@ _Cormonitor TallyVotes : public uBarrier {
     enum Tour { Picture = 'p', Statue = 's', GiftShop = 'g', Failed = 'f' };
     Tour vote( unsigned int id, Ballot ballot );
     void done();
-
-#if defined( MC )
-  private:
-    Tour winner; // winner of the vote
-#endif
 };
 
 #endif
