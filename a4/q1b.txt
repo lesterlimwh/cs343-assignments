@@ -18,4 +18,5 @@ multiple condition locks and owner locks implementation, although the difference
 I speculate that MC is the fastest since it allows barging, so there's less time spent on unneccessary
 waiting. Additionally, since semaphores and barriers are abstractions, they come with the tradeoff
 of being less optimized for the situation, and more generic. For example, barriers have implicit
-mutual exclusion, which is not necessarily needed for optimal speed.
+mutual exclusion, which is not necessarily needed for optimal speed, and semaphores support
+counting, but only their binary behaviour is necessary.
