@@ -1,0 +1,21 @@
+i.
+MC
+@ubuntu1604-008% /usr/bin/time -f "%Uu %Ss %Er" ./vote 100 10 100000 1003
+19.73u 0.04s 0:19.72r
+
+SEM
+@ubuntu1604-008% /usr/bin/time -f "%Uu %Ss %Er" ./vote 100 10 100000 1003
+19.83u 0.08s 0:19.86r
+
+BAR
+@ubuntu1604-008% /usr/bin/time -f "%Uu %Ss %Er" ./vote 100 10 100000 1003
+20.90u 0.08s 0:20.92r
+
+ii.
+
+The barrier implementation is faster than the semaphore implementation, which is faster than the
+multiple condition locks and owner locks implementation, although the differences are not that significant.
+I speculate that MC is the fastest since it allows barging, so there's less time spent on unneccessary
+waiting. Additionally, since semaphores and barriers are abstractions, they come with the tradeoff
+of being less optimized for the situation, and more generic. For example, barriers have implicit
+mutual exclusion, which is not necessarily needed for optimal speed.
