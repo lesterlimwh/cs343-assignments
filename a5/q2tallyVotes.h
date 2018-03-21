@@ -58,6 +58,15 @@ _Monitor TallyVotes {
 
 #elif defined( TASK ) // internal/external scheduling task solution
 _Task TallyVotes {
+  uCondition groupComplete; // blocks when group not formed
+  unsigned int id; // current id server is working on
+  unsigned int num_voters;
+  unsigned int group_size;
+  Printer &printer;
+	unsigned int num_waiters; // counts number of waiters
+  unsigned int pictureCount; // counts number of picture votes
+  unsigned int statueCount; // counts number of statue votes
+  unsigned int giftShopCount; // counts number of gift shop votes
 
 #else
   #error unsupported voter type
@@ -72,6 +81,7 @@ public: // common interface
   void done();
 private:
 	Tour winner; // holds winner of vote
+  Tour ballot; // holds current ballot for server task
 };
 
 #endif
