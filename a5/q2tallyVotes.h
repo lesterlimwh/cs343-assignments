@@ -27,9 +27,7 @@ _Monitor TallyVotes {
   uCondition groupComplete; // blocks when group not formed
 
 #elif defined( INTB ) // internal scheduling monitor solution with barging
-// includes for this kind of vote-tallier
 _Monitor TallyVotes {
-	// private declarations for this kind of vote-tallier
 	uCondition bench; // only one condition variable (you may change the variable name)
 	void wait(); // barging version of wait
 	void signalAll(); // unblock all waiting tasks
@@ -45,8 +43,18 @@ _Monitor TallyVotes {
   unsigned int currentTicket; // ticket that is being served
 
 #elif defined( AUTO ) // automatic-signal monitor solution
-// includes for this kind of vote-tallier
+#include "AutomaticSignal.h"
 _Monitor TallyVotes {
+  unsigned int num_voters;
+  unsigned int group_size;
+  Printer &printer;
+  AUTOMATIC_SIGNAL;
+  bool groupComplete; // flag that indicates group is completed
+	unsigned int num_waiters; // counts number of waiters
+  unsigned int pictureCount; // counts number of picture votes
+  unsigned int statueCount; // counts number of statue votes
+  unsigned int giftShopCount; // counts number of gift shop votes
+  unsigned int completedVoters; // number of voters who are done
 
 #elif defined( TASK ) // internal/external scheduling task solution
 _Task TallyVotes {
