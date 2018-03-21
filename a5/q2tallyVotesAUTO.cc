@@ -14,12 +14,15 @@ TallyVotes::TallyVotes( unsigned int voters, unsigned int group, Printer & print
 
 // vote tallier simulating general automatic-signal monitor 
 TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
+
   printer.print(id, Voter::States::Vote, ballot);
 
   // add votes
   pictureCount += ballot.picture;
   statueCount += ballot.statue;
   giftShopCount += ballot.giftshop;
+
+  num_waiters++;
 
   if (num_waiters == group_size) { // enough voters to form group
     printer.print(id, Voter::States::Complete);
@@ -41,10 +44,14 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
 
     groupComplete = true;
   } else { // wait for more voters
-    WAITUNTIL(groupComplete,
-        printer.print(id, Voter::States::Block, ++num_waiters),
-        printer.print(id, Voter::States::Block, --num_waiters)
-    );
+    printer.print(id, Voter::States::Block, num_waiters);
+    WAITUNTIL(groupComplete,,);
+    printer.print(id, Voter::States::Block, num_waiters - 1);
+  }
+
+  num_waiters--;
+  if (num_waiters == 0) { // last voter of this group resets flag for next group
+    groupComplete = false;
   }
 
   RETURN(winner);

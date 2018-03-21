@@ -6,9 +6,9 @@
     if (!pred){ \
         before; \
         while (!blocked.empty()) {blocked.signal();} \
-        do { \
+        while(!pred) { \
             blocked.wait(); \
-        } while (!pred); \
+        } \
         after; \
     }
 #define RETURN( expr... ) \
