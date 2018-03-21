@@ -14,6 +14,10 @@ TallyVotes::TallyVotes( unsigned int voters, unsigned int group, Printer & print
 
 // vote tallier simulating general automatic-signal monitor 
 TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
+  unsigned int remaining_voters = num_voters - completedVoters;
+  if (remaining_voters < group_size) {
+    RETURN(Tour::Failed);
+  }
 
   printer.print(id, Voter::States::Vote, ballot);
 
@@ -48,6 +52,11 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
     WAITUNTIL(groupComplete,,);
     printer.print(id, Voter::States::Block, num_waiters - 1);
   }
+  
+  remaining_voters = num_voters - completedVoters;
+  if (remaining_voters < group_size) {
+    RETURN(Tour::Failed);
+  }
 
   num_waiters--;
   if (num_waiters == 0) { // last voter of this group resets flag for next group
@@ -62,6 +71,7 @@ void TallyVotes::done() {
 
   unsigned int remaining_voters = num_voters - completedVoters;
   if (remaining_voters < group_size) {
-    // uBarrier::block();
+    groupComplete = true;
+    RETURN();
   }
 }
