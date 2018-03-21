@@ -28,6 +28,11 @@ TallyVotes::TallyVotes( unsigned int voters, unsigned int group, Printer & print
 
 // vote tallier with internal scheduling, simulating Java monitor
 TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
+  unsigned int remaining_voters = num_voters - completedVoters;
+  if (remaining_voters < group_size) {
+    return Tour::Failed;
+  }
+
 	unsigned int myTicket = ticket; // assign ticket
 	ticket++; // bump global ticket counter
 
@@ -69,12 +74,12 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
 
     wait();
 
-    unsigned int remaining_voters = num_voters - completedVoters;
-    if (remaining_voters < group_size) {
-      return Tour::Failed;
-    }
-
     printer.print(id, Voter::States::Unblock, num_waiters - 1);
+  }
+
+  remaining_voters = num_voters - completedVoters;
+  if (remaining_voters < group_size) {
+    return Tour::Failed;
   }
 
 	num_waiters--;

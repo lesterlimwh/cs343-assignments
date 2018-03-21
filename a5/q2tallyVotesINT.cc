@@ -13,6 +13,11 @@ TallyVotes::TallyVotes( unsigned int voters, unsigned int group, Printer & print
 
 // vote tallier with internal scheduling
 TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
+  unsigned int remaining_voters = num_voters - completedVoters;
+  if (remaining_voters < group_size) {
+    return Tour::Failed;
+  }
+
   printer.print(id, Voter::States::Vote, ballot);
 
   // add votes
@@ -46,7 +51,13 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
   }
 
   groupComplete.signal(); // unblock vote() call
+
 	num_waiters--;
+
+  remaining_voters = num_voters - completedVoters;
+  if (remaining_voters < group_size) {
+    return Tour::Failed;
+  }
 
   return winner;
 }
@@ -56,6 +67,6 @@ void TallyVotes::done() {
 
   unsigned int remaining_voters = num_voters - completedVoters;
   if (remaining_voters < group_size) {
-    // uBarrier::block();
+    groupComplete.signal();
   }
 }
