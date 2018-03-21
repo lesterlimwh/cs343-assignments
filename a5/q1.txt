@@ -4,4 +4,7 @@ in order for a deadlock to occur, there are several conditions that must be met.
 several processes holding a resource while waiting for access to a resource held by another
 process. However, because there is no such shared resource that the weeping angels are trying to
 acquire, then there is no deadlock. Rather, there is a livelock since there is no progression,
-despite there being no shared resource that the angels are trying to acquire.
+despite there being no shared resource that the angels are trying to acquire. Another way
+to prove it is a livelock is by conducting the cardboard test -- since putting a cardboard between
+the angels would resume their movement, then it is an indication that they aren't blocked inside
+the critical section already, but are not in it yet and simply having indefinite postponement.
