@@ -1,0 +1,7 @@
+The Weeping Angels turn to stone when they are observed. At first, it might seem like it's a
+deadlock, since they are unable to progress when there is a set of eyes on them. However,
+in order for a deadlock to occur, there are several conditions that must be met. These include
+several processes holding a resource while waiting for access to a resource held by another
+process. However, because there is no such shared resource that the weeping angels are trying to
+acquire, then there is no deadlock. Rather, there is a livelock since there is no progression,
+despite there being no shared resource that the angels are trying to acquire.
