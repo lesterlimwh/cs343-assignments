@@ -5,7 +5,7 @@ void TallyVotes::wait() {
 	bench.wait(); // wait until signalled
 	while ( rand() % 2 == 0 ) { // multiple bargers allowed
 		_Accept( vote ) { // accept barging callers
-		} Else { // do not wait if no callers
+		} _Else { // do not wait if no callers
 		} // Accept
 	} // while
 }
@@ -23,7 +23,7 @@ TallyVotes::TallyVotes( unsigned int voters, unsigned int group, Printer & print
 	statueCount(0),
 	giftShopCount(0),
   ticket(0),
-  currentTicket(0),
+  currentTicket(group),
 	completedVoters(0) {}
 
 // vote tallier with internal scheduling, simulating Java monitor
@@ -31,7 +31,7 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
 	unsigned int myTicket = ticket; // assign ticket
 	ticket++; // bump global ticket counter
 
-	while (myTicket > currentTicket) {
+	while (myTicket >= currentTicket) {
     printer.print(id, Voter::States::Barging);
     wait();
   }
@@ -66,13 +66,23 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
     signalAll();
   } else { // wait for more voters
     printer.print(id, Voter::States::Block, num_waiters);
+
     wait();
+
+    unsigned int remaining_voters = num_voters - completedVoters;
+    if (remaining_voters < group_size) {
+      return Tour::Failed;
+    }
+
     printer.print(id, Voter::States::Unblock, num_waiters - 1);
   }
 
 	num_waiters--;
 
-  currentTicket++; // serve next ticket
+  if (num_waiters == 0) {
+    currentTicket += group_size; // unblock next generation
+    signalAll();
+  }
 
   return winner;
 }
@@ -82,6 +92,6 @@ void TallyVotes::done() {
 
   unsigned int remaining_voters = num_voters - completedVoters;
   if (remaining_voters < group_size) {
-    // uBarrier::block();
+    signalAll();
   }
 }
