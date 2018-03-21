@@ -14,10 +14,10 @@ TallyVotes::TallyVotes( unsigned int voters, unsigned int group, Printer & print
 // vote tallier with external scheduling
 TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
   // force waiting voters to unblock
-  // unsigned int remaining_voters = num_voters - completedVoters;
-  // if (remaining_voters < group_size) {
-    // return TallyVotes::Tour::Failed;
-  // }
+  unsigned int remaining_voters = num_voters - completedVoters;
+  if (remaining_voters < group_size) {
+    return TallyVotes::Tour::Failed;
+  }
 
   printer.print(id, Voter::States::Vote, ballot);
 
@@ -47,12 +47,21 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
     giftShopCount = 0;
   } else { // wait for more voters
     printer.print(id, Voter::States::Block, num_waiters);
-		_Accept(vote);
+    for (;;) {
+      _Accept(vote) {
+        break;
+      } or _Accept(done) {
+        unsigned int remaining_voters = num_voters - completedVoters;
+        if (remaining_voters < group_size) {
+          return TallyVotes::Tour::Failed;
+        }
+      }
+    }
 
-    // remaining_voters = num_voters - completedVoters;
-    // if (remaining_voters < group_size) {
-      // return TallyVotes::Tour::Failed;
-    // }
+    remaining_voters = num_voters - completedVoters;
+    if (remaining_voters < group_size) {
+      return TallyVotes::Tour::Failed;
+    }
 
     printer.print(id, Voter::States::Unblock, num_waiters - 1);
   }
@@ -64,11 +73,4 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
 
 void TallyVotes::done() {
   completedVoters += 1;
-
-  unsigned int remaining_voters = num_voters - completedVoters;
-  if (remaining_voters < group_size) {
-    // for (int i = 0; i < remaining_voters; ++i) {
-      // vote(-1, (TallyVotes::Ballot){0, 0, 0});
-    // }
-  }
 }
