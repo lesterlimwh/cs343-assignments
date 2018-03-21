@@ -1,6 +1,19 @@
 #include "q2tallyVotes.h"
 #include "q2printer.h"
 
+void TallyVotes::wait() {
+	bench.wait(); // wait until signalled
+	while ( rand() % 2 == 0 ) { // multiple bargers allowed
+		_Accept( vote ) { // accept barging callers
+		} Else { // do not wait if no callers
+		} // Accept
+	} // while
+}
+
+void TallyVotes::signalAll() { // also useful
+	while ( ! bench.empty() ) bench.signal(); // drain the condition
+}
+
 TallyVotes::TallyVotes( unsigned int voters, unsigned int group, Printer & printer ) :
 	num_voters(voters),
 	group_size(group),
@@ -9,15 +22,19 @@ TallyVotes::TallyVotes( unsigned int voters, unsigned int group, Printer & print
 	pictureCount(0),
 	statueCount(0),
 	giftShopCount(0),
+  ticket(0),
+  currentTicket(0),
 	completedVoters(0) {}
 
-// vote tallier with external scheduling
+// vote tallier with internal scheduling, simulating Java monitor
 TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
-  // force waiting voters to unblock
-  // unsigned int remaining_voters = num_voters - completedVoters;
-  // if (remaining_voters < group_size) {
-    // return TallyVotes::Tour::Failed;
-  // }
+	unsigned int myTicket = ticket; // assign ticket
+	ticket++; // bump global ticket counter
+
+	while (myTicket > currentTicket) {
+    printer.print(id, Voter::States::Barging);
+    wait();
+  }
 
   printer.print(id, Voter::States::Vote, ballot);
 
@@ -45,19 +62,17 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
     pictureCount = 0;
     statueCount = 0;
     giftShopCount = 0;
+
+    signalAll();
   } else { // wait for more voters
     printer.print(id, Voter::States::Block, num_waiters);
-		_Accept(vote);
-
-    // remaining_voters = num_voters - completedVoters;
-    // if (remaining_voters < group_size) {
-      // return TallyVotes::Tour::Failed;
-    // }
-
+    wait();
     printer.print(id, Voter::States::Unblock, num_waiters - 1);
   }
 
 	num_waiters--;
+
+  currentTicket++; // serve next ticket
 
   return winner;
 }
@@ -67,8 +82,6 @@ void TallyVotes::done() {
 
   unsigned int remaining_voters = num_voters - completedVoters;
   if (remaining_voters < group_size) {
-    // for (int i = 0; i < remaining_voters; ++i) {
-      // vote(-1, (TallyVotes::Ballot){0, 0, 0});
-    // }
+    // uBarrier::block();
   }
 }

@@ -33,6 +33,16 @@ _Monitor TallyVotes {
 	uCondition bench; // only one condition variable (you may change the variable name)
 	void wait(); // barging version of wait
 	void signalAll(); // unblock all waiting tasks
+  unsigned int num_voters;
+  unsigned int group_size;
+  Printer &printer;
+	unsigned int num_waiters; // counts number of waiters
+  unsigned int pictureCount; // counts number of picture votes
+  unsigned int statueCount; // counts number of statue votes
+  unsigned int giftShopCount; // counts number of gift shop votes
+  unsigned int completedVoters; // number of voters who are done
+  unsigned int ticket; // counts all tickets
+  unsigned int currentTicket; // ticket that is being served
 
 #elif defined( AUTO ) // automatic-signal monitor solution
 // includes for this kind of vote-tallier
