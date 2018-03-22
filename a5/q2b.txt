@@ -1,0 +1,24 @@
+i)
+
+/usr/bin/time -f "%Uu %Ss %Er" ./voteEXT 100 10 700 1003
+0.59u 4.29s 0:07.30r
+
+/usr/bin/time -f "%Uu %Ss %Er" ./voteINT 100 10 700 1003
+0.60u 4.88s 0:07.08r
+
+/usr/bin/time -f "%Uu %Ss %Er" ./voteINTB 100 10 700 1003
+1.28u 8.46s 0:13.63r
+
+/usr/bin/time -f "%Uu %Ss %Er" ./voteAUTO 100 10 700 1003
+0.62u 4.92s 0:07.20r
+
+/usr/bin/time -f "%Uu %Ss %Er" ./voteTASK 100 10 700 1003
+0.58u 5.01s 0:07.48r
+
+ii)
+
+From the timing results, we observe that voteINTB performs the slowest, with the other ones
+performing similarly. In the Java monitor approach, there is only one condition queue, which
+allows barging of voter tasks. In order to prevent barging, cycles are wasted with waiting
+in the while loops. Since the condition is rand() % 2 == 0 in the wait() while condition,
+then the performance is roughly twice as slow compared to other implementations.
