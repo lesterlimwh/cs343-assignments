@@ -1,0 +1,506 @@
+Q2 TEST DOCUMENTATION
+========================
+
+The program takes parameters from the CLI. Then, it simulates voting and outputs the corresponding
+results as output to stdout.
+
+USER INTERFACE TESTING
+  There is no user interface to be tested, so the testing focuses solely on
+  program output based on different inputs.
+
+ALGORITHM TESTING
+  TEST 1: INVALID USAGE 
+    DESCRIPTION
+    This test is to check that our CLI gracefully fails on invalid input.
+
+    TESTING
+    ```
+    ./vote 2 6 1 1
+    ```
+
+    OUTPUT
+    ```
+    Usage: ./vote [ voters (> 0 & voters mod group = 0) | 'x' (default 6) [ group (> 0) | 'x' (default 3) [ votes (> 0) | 'x' (default 1) [ seed (> 0), | 'x' (default random) ] ] ] ]
+    ```
+
+    ANALYSIS
+    The output is correct as per specification, since stderr displays an appropriate usage.
+
+
+  TEST 2: EXTERNAL SCHEDULING - NO FAILURE
+    DESCRIPTION
+    This test compiles with TYPE=EXT and checks it behaves according to specifications.
+
+    TESTING
+    ```
+    ./vote 6 3 2 576707
+    ```
+
+    OUTPUT
+    ```
+		V0	V1	V2	V3	V4	V5
+		*******	*******	*******	*******	*******	*******
+							S
+							V 1,0,2
+					S		B 1
+					V 2,1,0
+		S	S	S	B 2
+				V 0,2,1
+				C	U 1		U 0
+					F g
+					S
+					V 1,0,2
+				F g	B 1
+		V 1,2,0		S
+		B 2	V 2,0,1
+		U 1	C		U 0	S
+						V 2,0,1
+			F p			B 1
+			S				F g
+				V 2,1,0			S
+		F p		B 2
+		S
+		V 2,1,0
+		C		U 1	F p
+		F p	V 0,2,1	F p		U 0
+			B 1				V 0,2,1
+						F p	B 2
+						S
+						V 2,0,1
+			U 0			C	U 1
+			F s			F s	F s
+		*****************
+		All tours started
+    ```
+
+    ANALYSIS
+    The program behaves as expected. All voters that start finish.
+
+  TEST 3: EXTERNAL SCHEDULING - FAILURE 
+    DESCRIPTION
+    This test compiles with TYPE=EXT and checks it behaves according to specifications. It also
+    checks that the program doesn't deadlock in the case of failures to form groups.
+
+    TESTING
+    ```
+    ./vote 6 3 2 797201
+    ```
+
+    OUTPUT
+    ```
+		V0	V1	V2	V3	V4	V5
+		*******	*******	*******	*******	*******	*******
+		S		S			S
+		V 1,2,0
+		B 1					V 0,1,2
+				V 0,1,2			B 2
+		U 0		C			U 1
+							F g
+		F g					S
+		S		F g
+				S
+				V 2,0,1
+				B 1	S
+					V 1,2,0
+			S		B 2		V 0,2,1
+							C
+		V 0,1,2		U 0	U 1		F s
+		B 1		F s	F s
+			V 1,0,2		S
+			B 2		V 1,0,2	S
+			U 1		C
+			F g
+		U 0	S		F g
+			V 1,0,2
+			B 1			V 2,1,0
+		F g				B 2
+			X			X
+		*****************
+		All tours started
+		```
+
+    ANALYSIS
+    The program behaves as expected. All voters that start finish, and the leftover voters
+		output an 'X'.
+
+	TEST 4: INTERNAL SCHEDULING - NO FAILURE
+    DESCRIPTION
+    This test compiles with TYPE=INT and checks it behaves according to specifications.
+
+    TESTING
+    ```
+    ./vote 6 3 2 779110
+    ```
+
+    OUTPUT
+    ```
+		V0	V1	V2	V3	V4	V5
+		*******	*******	*******	*******	*******	*******
+		S		S		S
+				V 0,1,2
+				B 1		V 0,2,1
+		V 2,1,0				B 2
+		C		U 1	S	U 0
+		F s
+		S
+		V 1,0,2
+		B 1		F s
+				S
+				V 2,1,0
+				B 2		F s
+						S
+						V 2,0,1
+		U 1				C
+		F p	S	U 0	V 0,2,1	F p
+			V 0,2,1		B 1
+			B 2	F p			S
+							V 2,1,0
+					U 1		C
+					F s
+			U 0		S		F s
+					V 0,1,2		S
+					B 1		V 1,0,2
+			F s				B 2
+			S
+			V 1,2,0
+			C		U 1		U 0
+			F g		F g		F g
+		*****************
+		All tours started
+    ```
+
+    ANALYSIS
+    The program behaves as expected. All voters that start finish.
+
+  TEST 5: INTERNAL SCHEDULING - FAILURE 
+    DESCRIPTION
+    This test compiles with TYPE=INT and checks it behaves according to specifications. It also
+    checks that the program doesn't deadlock in the case of failures to form groups.
+
+    TESTING
+    ```
+    ./vote 6 3 2 592851
+    ```
+
+    OUTPUT
+    ```
+		V0	V1	V2	V3	V4	V5
+		*******	*******	*******	*******	*******	*******
+						S
+						V 0,1,2
+			S			B 1
+			V 1,0,2
+			B 2	S
+				V 0,1,2
+			U 0	C	S	U 1
+			F g
+			S		V 2,0,1
+					B 1	F g
+				F g		S
+				S
+				V 0,1,2
+		S		B 2		V 2,0,1
+		V 0,1,2		U 0	U 1	C
+		B 1			F g
+			V 2,1,0		S	F g	S
+			B 2	F g	V 0,2,1
+		U 1	U 0		C
+			F s				V 1,2,0
+		F s			F s		B 1
+		S					U 0
+		X					X
+		*****************
+		All tours started
+		```
+
+    ANALYSIS
+    The program behaves as expected. All voters that start finish, and the leftover voters
+		output an 'X'.
+
+
+	TEST 6: JAVA MONITOR - NO FAILURE
+    DESCRIPTION
+    This test compiles with TYPE=INTB and checks it behaves according to specifications.
+
+    TESTING
+    ```
+    ./vote 6 3 2 667
+    ```
+
+    OUTPUT
+    ```
+		V0	V1	V2	V3	V4	V5
+		*******	*******	*******	*******	*******	*******
+		S	S				S
+		V 1,0,2
+		B 1	V 2,0,1
+			B 2				V 2,0,1
+			U 1				C
+			F p
+		U 0	S			S
+						V 0,1,2
+						B 1	F p
+		F p					S
+		S
+		V 2,1,0
+		B 2					V 1,0,2
+		U 1					C
+		F g	b	S	S	U 0	F g
+				V 2,1,0
+			V 0,2,1	B 1
+			B 2			F g
+					V 0,2,1	S
+			U 1	U 0	C
+			F s			V 2,1,0
+				F s		B 1
+				S	F s
+				V 0,1,2	S
+				B 2	V 1,2,0
+				U 1	C	U 0
+				F s	F s	F s
+		*****************
+    ```
+
+    ANALYSIS
+    The program behaves as expected. All voters that start finish.
+
+  TEST 7: JAVA MONITOR - FAILURE 
+    DESCRIPTION
+    This test compiles with TYPE=INTB and checks it behaves according to specifications. It also
+    checks that the program doesn't deadlock in the case of failures to form groups.
+
+    TESTING
+    ```
+    ./vote 6 3 2 825189
+    ```
+
+    OUTPUT
+    ```
+		V0	V1	V2	V3	V4	V5
+		*******	*******	*******	*******	*******	*******
+		S	S				S
+			V 1,2,0
+			B 1				V 2,1,0
+		V 0,2,1					B 2
+		C					U 1
+							F s
+		F s	U 0				S
+		S
+		V 1,2,0
+		B 1					V 0,1,2
+			F s				B 2
+			S		S
+					V 1,2,0
+					C		U 1
+					F s
+		U 0			S	S
+						V 2,1,0
+			V 0,2,1			B 1
+			B 2	S	V 0,1,2		F s
+		F s	U 1		C	U 0
+			F s	X	F s	F s
+						S
+						X
+		*****************
+		All tours started
+		```
+
+    ANALYSIS
+    The program behaves as expected. All voters that start finish, and the leftover voters
+		output an 'X'.
+
+	TEST 8: AUTOMATIC SIGNAL GENERATOR - NO FAILURE
+    DESCRIPTION
+    This test compiles with TYPE=AUTO and checks it behaves according to specifications.
+
+    TESTING
+    ```
+    ./vote 6 3 2 123
+    ```
+
+    OUTPUT
+    ```
+		V0	V1	V2	V3	V4	V5
+		*******	*******	*******	*******	*******	*******
+					S
+					V 0,2,1
+					B 1		S
+							V 2,0,1
+		S	S	S			B 2
+		V 1,2,0
+		C			B 1		B 0
+		F s
+		S	V 0,1,2
+			B 1				F s
+				V 2,1,0			S
+				B 2	F s
+		V 0,2,1			S	S
+		C
+		F s	B 1	B 0	V 2,1,0
+			F s		B 1
+			S				V 1,2,0
+				F s			B 2
+				S		V 0,1,2
+					B 1	C
+						F s
+			V 2,1,0			S	B 0
+			B 1		F s	V 0,1,2
+				V 2,1,0		B 2
+			B 1	C		B 0	F s
+			F p	F p		F p
+		*****************
+		All tours started
+    ```
+
+    ANALYSIS
+    The program behaves as expected. All voters that start finish.
+
+  TEST 9: AUTOMATIC SIGNAL GENERATOR - FAILURE 
+    DESCRIPTION
+    This test compiles with TYPE=AUTO and checks it behaves according to specifications. It also
+    checks that the program doesn't deadlock in the case of failures to form groups.
+
+    TESTING
+    ```
+    ./vote 6 3 2 384897
+    ```
+
+    OUTPUT
+    ```
+		V0	V1	V2	V3	V4	V5
+		*******	*******	*******	*******	*******	*******
+				S
+				V 2,0,1
+		S	S	B 1
+		V 1,2,0
+		B 2	V 0,1,2
+		B 0	C	B 1		S	S
+							V 2,1,0
+			F g				B 1
+			S	F g
+				S		V 2,1,0
+		F g				B 2
+		S
+		V 0,2,1
+		C					B 1
+							F p
+		F p				B 0	S
+							V 2,0,1
+				V 2,0,1	S		B 1
+				B 2		F p
+			V 1,0,2			S
+			C				B 1
+			F p	B 0
+				F p		V 1,0,2	F p
+					V 1,0,2	B 1
+					B 2	B 1
+					B 1	X
+					X
+		*****************
+		All tours started
+		```
+
+    ANALYSIS
+    The program behaves as expected. All voters that start finish, and the leftover voters
+		output an 'X'.
+
+	TEST 10: SERVER TASK - NO FAILURE
+    DESCRIPTION
+    This test compiles with TYPE=TASK and checks it behaves according to specifications.
+
+    TESTING
+    ```
+    ./vote 6 3 2 915289
+    ```
+
+    OUTPUT
+    ```
+		V0	V1	V2	V3	V4	V5
+		*******	*******	*******	*******	*******	*******
+		S	S	S	S	S
+			V 0,1,2
+			B 1		V 1,2,0
+		V 1,2,0			B 2
+		B 3
+		C	U 2		U 1
+					F s
+			F s		S
+		U 0	S	V 0,2,1			S
+		F s		B 1
+		S				V 2,0,1
+					V 1,0,2	B 2
+					B 3
+				U 2	C	U 1
+				F g
+				S	U 0	F g
+			V 1,0,2			S
+			B 1		F g		V 2,0,1
+		V 0,1,2					B 2
+		B 3
+		C	U 2				U 1
+		U 0	F g				F g
+				V 1,2,0			S
+		F g		B 1		V 1,0,2
+						B 2	V 1,2,0
+							B 3
+				U 2			C
+				F s		U 1	U 0
+						F s	F s
+		*****************
+		All tours started
+    ```
+
+    ANALYSIS
+    The program behaves as expected. All voters that start finish.
+
+  TEST 11: SERVER TASK- FAILURE 
+    DESCRIPTION
+    This test compiles with TYPE=TASK and checks it behaves according to specifications. It also
+    checks that the program doesn't deadlock in the case of failures to form groups.
+
+    TESTING
+    ```
+    ./vote 6 3 2 615466
+    ```
+
+    OUTPUT
+    ```
+		V0	V1	V2	V3	V4	V5
+		*******	*******	*******	*******	*******	*******
+							S
+							V 2,0,1
+		S					B 1
+		V 2,0,1
+		B 2			S
+					V 1,2,0
+					B 3
+		U 1			C		U 2
+					U 0		F p
+				S	F p		S
+		F p			S
+		S		V 0,1,2
+			S	B 1	V 0,1,2
+					B 2	S	V 2,0,1
+							B 3
+				U 2			C
+				F g
+				S	U 1
+					F g		U 0
+			V 2,1,0				F g
+		V 2,1,0	B 1
+		B 2		V 0,1,2
+				B 3
+		U 1	U 2	C
+			F p
+		F p	S	U 0		V 2,1,0
+			V 2,1,0	F p		B 1
+			B 2			X
+			X
+		*****************
+		All tours started
+		```
+
+    ANALYSIS
+    The program behaves as expected. All voters that start finish, and the leftover voters
+		output an 'X'.
+
