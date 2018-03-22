@@ -50,12 +50,22 @@ void TallyVotes::main() {
           groupComplete.signalBlock();
         }
       }
+    } or _Accept(done) {
+      unsigned int remaining_voters = num_voters - completedVoters;
+      if (remaining_voters < group_size) {
+        winner = Tour::Failed;
+
+        while (!groupComplete.empty()) { // unblock all other voters
+          groupComplete.signalBlock();
+        }
+      }
     }
   }
 }
 
 // vote tallier with server task
 TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
+  // communication variables
   TallyVotes::id = id;
   TallyVotes::ballot = ballot;
 

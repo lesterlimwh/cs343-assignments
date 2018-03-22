@@ -67,6 +67,8 @@ _Task TallyVotes {
   unsigned int pictureCount; // counts number of picture votes
   unsigned int statueCount; // counts number of statue votes
   unsigned int giftShopCount; // counts number of gift shop votes
+  unsigned int completedVoters; // number of voters who are done
+  void main();
 
 #else
   #error unsupported voter type
@@ -81,7 +83,7 @@ public: // common interface
   void done();
 private:
 	Tour winner; // holds winner of vote
-  Tour ballot; // holds current ballot for server task
+  Ballot ballot; // holds current ballot for server task
 };
 
 #endif
