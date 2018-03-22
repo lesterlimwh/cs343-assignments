@@ -45,12 +45,14 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
     pictureCount = 0;
     statueCount = 0;
     giftShopCount = 0;
+
   } else { // wait for more voters
     printer.print(id, Voter::States::Block, num_waiters);
+
     for (;;) {
       _Accept(vote) {
         break;
-      } or _Accept(done) {
+      } or _Accept(done) { // if done is received, check if error, but we still need to wait for vote()
         unsigned int remaining_voters = num_voters - completedVoters;
         if (remaining_voters < group_size) {
           return TallyVotes::Tour::Failed;

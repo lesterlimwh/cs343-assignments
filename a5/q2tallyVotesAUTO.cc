@@ -16,7 +16,7 @@ TallyVotes::TallyVotes( unsigned int voters, unsigned int group, Printer & print
 TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
   unsigned int remaining_voters = num_voters - completedVoters;
   if (remaining_voters < group_size) {
-    RETURN(Tour::Failed);
+    RETURN(Tour::Failed); // early exit
   }
 
   printer.print(id, Voter::States::Vote, ballot);
@@ -53,6 +53,7 @@ TallyVotes::Tour TallyVotes::vote( unsigned int id, Ballot ballot ) {
     printer.print(id, Voter::States::Block, num_waiters - 1);
   }
   
+  // after voter unblocked, return failed if appropriate
   remaining_voters = num_voters - completedVoters;
   if (remaining_voters < group_size) {
     RETURN(Tour::Failed);
@@ -72,6 +73,6 @@ void TallyVotes::done() {
   unsigned int remaining_voters = num_voters - completedVoters;
   if (remaining_voters < group_size) {
     groupComplete = true;
-    RETURN();
+    RETURN(); // unblock all voters
   }
 }

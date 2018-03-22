@@ -50,7 +50,7 @@ void TallyVotes::main() {
           groupComplete.signalBlock();
         }
       }
-    } or _Accept(done) {
+    } or _Accept(done) { // allow done's to go through
       unsigned int remaining_voters = num_voters - completedVoters;
       if (remaining_voters < group_size) {
         winner = Tour::Failed;
