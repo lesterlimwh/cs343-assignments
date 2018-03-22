@@ -1,4 +1,4 @@
-TYPE:=INT
+TYPE:=EXT
 
 CXX = u++ # compiler
 CXXFLAGS = -g -multi -O2 -std=c++11 -Wall -Wextra -MMD -D${TYPE} # compiler flags
