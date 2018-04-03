@@ -21,9 +21,9 @@ std::string State::format() {
 }
 
 Printer::Printer( unsigned int numStudents, unsigned int numVendingMachines, unsigned int numCouriers ) :
-	numStudents(numStudents),
-	numVendingMachines(numVendingMachines),
-	numCouriers(numCouriers)
+  numStudents(numStudents),
+  numVendingMachines(numVendingMachines),
+  numCouriers(numCouriers)
 {
   buffer = new State*[numStudents + numVendingMachines + numCouriers + 6]; // 1 buffer slot for each student, vending machine, courier, and other entities
   for (unsigned int i = 0; i < numStudents + numVendingMachines + numCouriers + 6; ++i) {
@@ -31,12 +31,12 @@ Printer::Printer( unsigned int numStudents, unsigned int numVendingMachines, uns
   }
 
   // output header
-	cout << "Parent" << '\t';
-	cout << "Gropoff" << '\t';
-	cout << "WATOff" << '\t';
-	cout << "Names" << '\t';
-	cout << "Truck" << '\t';
-	cout << "Plant" << '\t';
+  cout << "Parent" << '\t';
+  cout << "Gropoff" << '\t';
+  cout << "WATOff" << '\t';
+  cout << "Names" << '\t';
+  cout << "Truck" << '\t';
+  cout << "Plant" << '\t';
 
   for (unsigned int i = 0; i < numStudents; ++i) {
     cout << "Stud" << i << '\t';
@@ -49,9 +49,9 @@ Printer::Printer( unsigned int numStudents, unsigned int numVendingMachines, uns
   for (unsigned int i = 0; i < numCouriers; ++i) {
     cout << "Cour" << i;
 
-		if (i != numCouriers - 1) {
-			cout << '\t';
-		}
+    if (i != numCouriers - 1) {
+      cout << '\t';
+    }
   }
 
   cout << endl;
@@ -69,13 +69,13 @@ Printer::~Printer() {
     delete buffer[i];
   }
   delete[] buffer;
-	cout << "***********************" << endl;
+  cout << "***********************" << endl;
 }
 
 void Printer::flush() {
   // figure out index to stop printing at
   unsigned int highest = 0;
-	unsigned int lastBufferIndex = numStudents + numVendingMachines + numCouriers + 6;
+  unsigned int lastBufferIndex = numStudents + numVendingMachines + numCouriers + 6;
   for (unsigned int id = lastBufferIndex; id > 0; --id) {
     if (buffer[id - 1] != nullptr) {
       highest = id - 1;
@@ -125,7 +125,7 @@ void Printer::print( Kind kind, char state ) {
     flush();
   }
 
-	buffer[idx] = new State(kind, state);
+  buffer[idx] = new State(kind, state);
 }
 
 void Printer::print( Kind kind, char state, int value1 ) {
@@ -134,7 +134,7 @@ void Printer::print( Kind kind, char state, int value1 ) {
     flush();
   }
 
-	buffer[idx] = new State(kind, state, value1);
+  buffer[idx] = new State(kind, state, value1);
 }
 
 void Printer::print( Kind kind, char state, int value1, int value2 ) {
@@ -143,7 +143,7 @@ void Printer::print( Kind kind, char state, int value1, int value2 ) {
     flush();
   }
 
-	buffer[idx] = new State(kind, state, value1, value2);
+  buffer[idx] = new State(kind, state, value1, value2);
 }
 
 void Printer::print( Kind kind, unsigned int lid, char state ) {
@@ -152,7 +152,7 @@ void Printer::print( Kind kind, unsigned int lid, char state ) {
     flush();
   }
 
-	buffer[idx] = new State(kind, lid, state);
+  buffer[idx] = new State(kind, lid, state);
 }
 
 void Printer::print( Kind kind, unsigned int lid, char state, int value1 ) {
@@ -161,7 +161,7 @@ void Printer::print( Kind kind, unsigned int lid, char state, int value1 ) {
     flush();
   }
 
-	buffer[idx] = new State(kind, lid, state, value1);
+  buffer[idx] = new State(kind, lid, state, value1);
 }
 
 void Printer::print( Kind kind, unsigned int lid, char state, int value1, int value2 ) {
@@ -170,6 +170,6 @@ void Printer::print( Kind kind, unsigned int lid, char state, int value1, int va
     flush();
   }
 
-	buffer[idx] = new State(kind, lid, state, value1, value2);
+  buffer[idx] = new State(kind, lid, state, value1, value2);
 }
 

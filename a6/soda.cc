@@ -12,7 +12,7 @@ MPRNG mprng; // globally defined mprng
 // prints usage information
 void usage(char *arg) {
   cerr << "Usage: " << arg
-		<< " [ config-file [ random-seed (> 0) ] ]" << endl;
+    << " [ config-file [ random-seed (> 0) ] ]" << endl;
   exit(EXIT_FAILURE);
 }
 
@@ -35,29 +35,29 @@ int main( int argc, char *argv[] ) {
   // read in and parse args
   switch (argc) {
     case 3:
-			seed = tryParseStringToNumber(argv[2]);
-			if (seed < 0) {
-				usage(argv[0]);
-			}
+      seed = tryParseStringToNumber(argv[2]);
+      if (seed < 0) {
+        usage(argv[0]);
+      }
     case 2:
       configFile = argv[1];
     case 1:
-			break;
+      break;
     default:
-			usage(argv[0]);
+      usage(argv[0]);
   }
 
-	mprng.set_seed(seed);
+  mprng.set_seed(seed);
 
-	// parse config file
-	ConfigParms config;
-	processConfigFile(configFile.c_str(), config);
+  // parse config file
+  ConfigParms config;
+  processConfigFile(configFile.c_str(), config);
 
-	// start tasks
-	Printer printer(config.numStudents, config.numVendingMachines, config.numCouriers);
+  // start tasks
+  Printer printer(config.numStudents, config.numVendingMachines, config.numCouriers);
   Bank bank(config.numStudents);
   Parent parent(printer, bank, config.numStudents, config.parentalDelay);
   bank.deposit(0, 20);
   bank.withdraw(0, 20); 
-	// end tasks
+  // end tasks
 }

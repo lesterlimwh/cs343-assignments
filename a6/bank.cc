@@ -1,9 +1,9 @@
 #include "bank.h"
 
 Bank::Bank(unsigned int numStudents) :
-	numStudents(numStudents), balances(new unsigned int[numStudents]) {
+  numStudents(numStudents), balances(new unsigned int[numStudents]) {
   for (unsigned int i = 0; i < numStudents; ++i) {
-  	balances[i] = 0;
+    balances[i] = 0;
   }
 }
 
