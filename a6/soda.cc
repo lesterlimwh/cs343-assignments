@@ -2,6 +2,7 @@
 #include "config.h"
 #include "MPRNG.h"
 #include "printer.h"
+#include "bank.h"
 
 using namespace std;
 
@@ -53,12 +54,17 @@ int main( int argc, char *argv[] ) {
 
 	// start tasks
 	Printer printer(config.numStudents, config.numVendingMachines, config.numCouriers);
+  Bank bank(config.numStudents);
   printer.print(Printer::Parent, 'S');
   printer.print(Printer::Parent, 'D', 0, 1);
   printer.print(Printer::Groupoff, 'D', 2);
   printer.print(Printer::Student, 0, 'S', 2, 4);
   printer.print(Printer::Student, 1, 'V', 1);
   printer.print(Printer::Student, 1, 'F');
+  bank.deposit(0, 20);
+  bank.withdraw(0, 20); 
+  
+
 
 	// end tasks
 }
