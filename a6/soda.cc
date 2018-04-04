@@ -7,6 +7,9 @@
 #include "watcardoffice.h"
 #include "nameserver.h"
 #include "vendingmachine.h"
+#include "groupoff.h"
+#include "student.h"
+#include "bottlingplant.h"
 
 using namespace std;
 
@@ -58,20 +61,38 @@ int main( int argc, char *argv[] ) {
 
   // start tasks
   Printer printer(config.numStudents, config.numVendingMachines, config.numCouriers);
+
   Bank bank(config.numStudents);
+
   Parent parent(printer, bank, config.numStudents, config.parentalDelay);
+
   WATCardOffice office(printer, bank, config.numCouriers);
+
   NameServer nameServer(printer, config.numVendingMachines, config.numStudents);
 
-  VendingMachine **vendingMachines = new VendingMachine*[config.numVendingMachines];
+  Groupoff groupoff(printer, config.numStudents, config.sodaCost, config.groupoffDelay);
 
+  BottlingPlant *plant = new BottlingPlant(printer, nameServer, config.numVendingMachines,
+    config.maxShippedPerFlavour, config.maxStockPerFlavour, config.timeBetweenShipments);
+
+  VendingMachine *vendingMachines[config.numVendingMachines];
   for (unsigned int i = 0; i < config.numVendingMachines; ++i) {
     vendingMachines[i] = new VendingMachine(printer, nameServer, i, config.sodaCost, config.maxStockPerFlavour);
   }
 
+  Student* students[config.numStudents];
+  for (unsigned int i = 0; i < config.numStudents; ++i) {
+    students[i] = new Student(printer, nameServer, office, groupoff, i, config.maxPurchases);
+  }
+
   // end tasks
+  for (unsigned int i = 0; i < config.numStudents; ++i) {
+    delete students[i];
+  }
+
+  delete plant;
+
   for (unsigned int i = 0; i < config.numVendingMachines; ++i) {
     delete vendingMachines[i];
   }
-  delete[] vendingMachines;
 }
