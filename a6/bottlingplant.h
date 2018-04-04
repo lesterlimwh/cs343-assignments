@@ -16,7 +16,7 @@ _Task BottlingPlant {
     unsigned int maxShippedPerFlavour;
     unsigned int maxStockPerFlavour;
     unsigned int timeBetweenShipments;
-    unsigned int *stock; // stock for each flavour
+    unsigned int stock[numFlavours]; // stock for each flavour
     bool closed; // true if plant has shut down
     Truck *truck;
     void main();
