@@ -4,6 +4,7 @@
 #include "printer.h"
 #include "parent.h"
 #include "bank.h"
+#include "watcardoffice.h"
 
 using namespace std;
 
@@ -57,7 +58,6 @@ int main( int argc, char *argv[] ) {
   Printer printer(config.numStudents, config.numVendingMachines, config.numCouriers);
   Bank bank(config.numStudents);
   Parent parent(printer, bank, config.numStudents, config.parentalDelay);
-  bank.deposit(0, 20);
-  bank.withdraw(0, 20); 
+  WATCardOffice office(printer, bank, config.numCouriers);
   // end tasks
 }
