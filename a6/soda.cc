@@ -5,6 +5,8 @@
 #include "parent.h"
 #include "bank.h"
 #include "watcardoffice.h"
+#include "nameserver.h"
+#include "vendingmachine.h"
 
 using namespace std;
 
@@ -59,5 +61,17 @@ int main( int argc, char *argv[] ) {
   Bank bank(config.numStudents);
   Parent parent(printer, bank, config.numStudents, config.parentalDelay);
   WATCardOffice office(printer, bank, config.numCouriers);
+  NameServer nameServer(printer, config.numVendingMachines, config.numStudents);
+
+  VendingMachine **vendingMachines = new VendingMachine*[config.numVendingMachines];
+
+  for (unsigned int i = 0; i < config.numVendingMachines; ++i) {
+    vendingMachines[i] = new VendingMachine(printer, nameServer, i, config.sodaCost, config.maxStockPerFlavour);
+  }
+
   // end tasks
+  for (unsigned int i = 0; i < config.numVendingMachines; ++i) {
+    delete vendingMachines[i];
+  }
+  delete[] vendingMachines;
 }
