@@ -1,6 +1,9 @@
 #include "groupoff.h"
 #include "MPRNG.h"
 
+#include <iostream>
+using namespace std;
+
 extern MPRNG mprng;
 
 Groupoff::Groupoff( Printer & prt, unsigned int numStudents, unsigned int sodaCost, unsigned int groupoffDelay ) :

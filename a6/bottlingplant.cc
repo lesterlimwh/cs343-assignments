@@ -1,6 +1,9 @@
 #include "bottlingplant.h"
 #include "MPRNG.h"
 
+#include <iostream>
+using namespace std;
+
 extern MPRNG mprng;
 
 BottlingPlant::BottlingPlant( Printer & prt, NameServer & nameServer, unsigned int numVendingMachines,
@@ -11,10 +14,18 @@ BottlingPlant::BottlingPlant( Printer & prt, NameServer & nameServer, unsigned i
   numVendingMachines(numVendingMachines),
   maxShippedPerFlavour(maxShippedPerFlavour),
   maxStockPerFlavour(maxStockPerFlavour),
-  timeBetweenShipments(timeBetweenShipments) {}
+  timeBetweenShipments(timeBetweenShipments),
+  closed(false) {}
+
+BottlingPlant::~BottlingPlant() {
+  if (truck != nullptr) {
+    delete truck;
+  }
+}
 
 void BottlingPlant::getShipment( unsigned int cargo[] ) {
   if (closed) {
+    uRendezvousAcceptor();
     _Throw Shutdown();
   }
 
@@ -45,6 +56,8 @@ void BottlingPlant::main() {
         count += stock[f];
       }
       printer.print(Printer::BottlingPlant, 'G', count);
+
+      _Accept(getShipment);
     }
   }
 

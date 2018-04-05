@@ -1,6 +1,9 @@
 #include "vendingmachine.h"
 #include "MPRNG.h"
 
+#include <iostream>
+using namespace std;
+
 extern MPRNG mprng;
 
 VendingMachine::VendingMachine( Printer & prt, NameServer & nameServer, unsigned int id, unsigned int sodaCost, unsigned int maxStockPerFlavour ) :
@@ -13,29 +16,23 @@ VendingMachine::VendingMachine( Printer & prt, NameServer & nameServer, unsigned
     for (unsigned int i = 0; i < numFlavours; ++i) {
       stocks[i] = 0; // new vending machine is empty
     }
-
-    nameServer.VMregister(this); // register with name server
   }
 
 void VendingMachine::buy( Flavours flavour, WATCard & card ) {
-  if (card.getBalance() < sodaCost) { // not enough money
-    _Throw Funds();
-  }
-
-  if (mprng(4) == 0) { // 1/5 chance of free soda
-    stocks[(unsigned int)flavour]--;
-    _Throw Free();
-  }
-
   if (stocks[(unsigned int)flavour] == 0) { // out of stock
     _Throw Stock();
+  } else if (mprng(4) == 0) { // 1/5 chance of free soda
+    stocks[(unsigned int)flavour]--;
+    _Throw Free();
+  } else if (card.getBalance() < sodaCost) { // not enough money
+    _Throw Funds();
+  } else {
+    // perform transaction
+    card.withdraw(sodaCost);
+    stocks[(unsigned int)flavour]--;
+
+    printer.print(Printer::Vending, id, 'B', (unsigned int)flavour, stocks[(unsigned int)flavour]);
   }
-
-  // perform transaction
-  card.withdraw(sodaCost);
-  stocks[(unsigned int)flavour]--;
-
-  printer.print(Printer::Vending, id, 'B', (unsigned int)flavour, stocks[(unsigned int)flavour]);
 }
 
 unsigned int * VendingMachine::inventory() {
@@ -56,6 +53,8 @@ _Nomutex unsigned int VendingMachine::getId() {
 }
 
 void VendingMachine::main() {
+  nameServer.VMregister(this); // register with name server
+
   printer.print(Printer::Vending, id, 'S', sodaCost);
 
   for (;;) {

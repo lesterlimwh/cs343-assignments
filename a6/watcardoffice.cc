@@ -1,6 +1,9 @@
 #include "watcardoffice.h"
 #include "MPRNG.h"
 
+#include <iostream>
+using namespace std;
+
 extern MPRNG mprng;
 
 void WATCardOffice::main() {
@@ -8,6 +11,14 @@ void WATCardOffice::main() {
 
   for (;;) {
     _Accept(~WATCardOffice) {
+      for (;;) {
+        if (jobs.empty()) break;
+        delete jobs.front();
+        jobs.pop();
+      }
+      for (unsigned int i = 0; i < numCouriers; ++i) {
+        _Accept(requestWork);
+      }
       // clean up
       for (unsigned int i = 0; i < numCouriers; ++i) {
         delete couriers[i];

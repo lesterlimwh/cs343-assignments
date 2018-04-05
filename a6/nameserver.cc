@@ -1,5 +1,8 @@
 #include "nameserver.h"
 
+#include <iostream>
+using namespace std;
+
 NameServer::NameServer( Printer & prt, unsigned int numVendingMachines, unsigned int numStudents ) :
   printer(prt),
   numVendingMachines(numVendingMachines),
@@ -42,7 +45,7 @@ void NameServer::main() {
   printer.print(Printer::NameServer, 'S');
 
   for (unsigned int i = 0; i < numVendingMachines; ++i) {
-    _Accept(VMRegister); // wait for all vending machines to be registered
+    _Accept(VMregister); // wait for all vending machines to be registered
   }
 
   for (;;) {
