@@ -66,6 +66,12 @@ void Student::main() {
     }
   }
 
+  try {
+    delete watCard();
+  } catch (...) {}
+
+  // delete giftCard(); // why does program not end if I uncomment this
+
   printer.print(Printer::Student, id, 'F');
 }
 
