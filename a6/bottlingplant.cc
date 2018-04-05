@@ -46,6 +46,7 @@ void BottlingPlant::main() {
       try {
         _Accept(getShipment); // final getShipment call
       } catch (uMutexFailure::RendezvousFailure) {}
+      break;
     } _Else {
       yield(timeBetweenShipments);
 

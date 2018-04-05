@@ -98,7 +98,7 @@ void WATCardOffice::Courier::main() {
 
       // deliver watcard
       if (mprng(5) == 0) { // 1/6th chance of losing card during delivery
-        printer.print(Printer::Courier, id, 'L');
+        printer.print(Printer::Courier, id, 'L', job->sid);
         job->result.exception(new WATCardOffice::Lost);
       } else {
         job->result.delivery(job->watcard);
